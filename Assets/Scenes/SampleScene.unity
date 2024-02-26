@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1073,7 +1073,6 @@ GameObject:
   m_Component:
   - component: {fileID: 840701000}
   - component: {fileID: 840700999}
-  - component: {fileID: 840700998}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1081,19 +1080,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &840700998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840700997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1030544ffb9343446a710549a36cdb96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InitialStartTracker: 1
 --- !u!114 &840700999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2506,8 +2492,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 941431464}
   m_HandleRect: {fileID: 941431463}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.7966667
+  m_Value: 0.9999995
+  m_Size: 0.79666656
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3285,7 +3271,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2079858145}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.516, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
