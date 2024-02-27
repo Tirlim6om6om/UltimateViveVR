@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using HTC.UnityPlugin.Vive;
-using HTC.UnityPlugin.Vive.SteamVRExtension;
 using HTC.UnityPlugin.VRModuleManagement;
 using UnityEngine;
+#if VIU_OPENVR_SUPPORT
+using HTC.UnityPlugin.Vive.SteamVRExtension;
 using Valve.VR;
+#endif
 using Wave.Essence.Tracker;
 using TrackerRole = Wave.Essence.Tracker.TrackerRole;
 

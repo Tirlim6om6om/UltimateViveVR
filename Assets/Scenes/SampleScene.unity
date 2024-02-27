@@ -170,7 +170,7 @@ MonoBehaviour:
   m_mode: 1
   m_viveRole:
     m_roleTypeFullName: HTC.UnityPlugin.Vive.BodyRole
-    m_roleValueName: LeftFoot
+    m_roleValueName: RightKnee
     m_roleValueInt: 0
   m_deviceIndex: 0
   m_overrideModel: 0
@@ -1535,7 +1535,7 @@ MonoBehaviour:
   m_origin: {fileID: 0}
   m_viveRole:
     m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
-    m_roleValueName: RightHand
+    m_roleValueName: LeftHand
     m_roleValueInt: 0
   m_onIsValidChanged:
     m_PersistentCalls:
@@ -1571,7 +1571,7 @@ MonoBehaviour:
   m_mode: 1
   m_viveRole:
     m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
-    m_roleValueName: RightHand
+    m_roleValueName: LeftHand
     m_roleValueInt: 0
   m_deviceIndex: 0
   m_overrideModel: 0
@@ -1979,7 +1979,7 @@ MonoBehaviour:
   m_origin: {fileID: 0}
   m_viveRole:
     m_roleTypeFullName: HTC.UnityPlugin.Vive.BodyRole
-    m_roleValueName: LeftFoot
+    m_roleValueName: RightKnee
     m_roleValueInt: 5
   m_onIsValidChanged:
     m_PersistentCalls:
@@ -1998,8 +1998,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_viveRole:
     m_roleTypeFullName: HTC.UnityPlugin.Vive.BodyRole
-    m_roleValueName: LeftFoot
-    m_roleValueInt: 5
+    m_roleValueName: RightKnee
+    m_roleValueInt: 6
 --- !u!1 &1252185295
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using Valve.VR;
 
 public class DebugVR : MonoBehaviour
 {
