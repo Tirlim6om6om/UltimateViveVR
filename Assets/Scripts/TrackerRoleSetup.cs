@@ -17,12 +17,20 @@ public class TrackerRoleSetup : MonoBehaviour
     private void Start()
     {
         _map = ViveRole.GetMap<BodyRole>();
+        if (VRModule.isWaveVRSupported && TrackerManager.Instance == null)
+        {
+            gameObject.AddComponent<TrackerManager>().InitialStartTracker = true;
+        }
         StartCoroutine(Wait());
     }
 
     private IEnumerator Wait()
     {
         yield return new WaitForEndOfFrame();
+        if (VRModule.isWaveVRSupported)
+        {
+            yield return new WaitUntil(() => TrackerManager.Instance);
+        }
 #if VIU_OPENVR_SUPPORT
         yield return new WaitUntil(() => SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess);
 #endif
@@ -47,7 +55,7 @@ public class TrackerRoleSetup : MonoBehaviour
                 return;
             if (VRModule.isWaveVRSupported)
             {
-                if(!GetTrackerRoleFromNameWiwe(device.modelNumber.Split(' ')[0], out BodyRole role))
+                if (!GetTrackerRoleFromNameWiwe(device.modelNumber.Split(' ')[0], out BodyRole role))
                     return;
                 SetRole(device, role);
             }
