@@ -8,22 +8,10 @@ using Valve.VR;
 using Wave.Essence.Tracker;
 using TrackerRole = Wave.Essence.Tracker.TrackerRole;
 
-public class WiweRoleGetter : MonoBehaviour
+public class TrackerRoleSetup : MonoBehaviour
 {
     private ViveRole.IMap _map;
     
-    private enum TypeTracker
-    {
-        Foot_Left,
-        Foot_Right,
-        Chest
-    }
-    
-    private void Awake()
-    {
-        //TODO проверка что это Wiwe
-    }
-
     private void Start()
     {
         _map = ViveRole.GetMap<BodyRole>();
@@ -32,8 +20,11 @@ public class WiweRoleGetter : MonoBehaviour
 
     private IEnumerator Wait()
     {
-        yield return new WaitForSeconds(1);
-        _map = ViveRole.GetMap<BodyRole>();
+        yield return new WaitForEndOfFrame();
+#if VIU_OPENVR_SUPPORT
+        yield return new WaitUntil(() => SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess);
+#endif
+        DebugVR.Log("Start");
         for (uint deviceIndex = 0, imax = VRModule.GetDeviceStateCount(); deviceIndex < imax; ++deviceIndex)
         {
             if (VRModule.GetCurrentDeviceState(deviceIndex).isConnected)
@@ -42,7 +33,6 @@ public class WiweRoleGetter : MonoBehaviour
             }
         }
         VRModule.onDeviceConnected += OnDeviceConnected;
-        DebugVR.Log("Start");
     }
 
     private void OnDeviceConnected(uint deviceIndex, bool connected)
@@ -51,71 +41,65 @@ public class WiweRoleGetter : MonoBehaviour
         DebugVR.Log("Add:" + deviceIndex  + " : " + device.serialNumber);
         if (device.isConnected)
         {
-            if(device.deviceClass == VRModuleDeviceClass.Controller)
+            if(device.deviceClass != VRModuleDeviceClass.GenericTracker)
                 return;
             if (VRModule.isWaveVRSupported)
             {
-                GetTrackerIDFromNameWiwe(device.modelNumber.Split(' ')[0], out TrackerId index);
-                TrackerRole role = TrackerManager.Instance.GetTrackerRole(index);
-                DebugVR.Log("Try add role: " + (TrackerId) deviceIndex + " + " + role);
-                switch (role)
-                {
-                    case TrackerRole.Foot_Left:
-                        SetRole(device, BodyRole.LeftFoot);
-                        break;
-                    case TrackerRole.Foot_Right:
-                        SetRole(device, BodyRole.RightFoot);
-                        break;
-                    case TrackerRole.Chest:
-                        SetRole(device, BodyRole.Hip);
-                        break;
-                }
+                if(!GetTrackerRoleFromNameWiwe(device.modelNumber.Split(' ')[0], out BodyRole role))
+                    return;
+                SetRole(device, role);
             }
-
-            if (VRModule.isSteamVRPluginDetected)
+#if VIU_OPENVR_SUPPORT
+            if (VRModule.isOpenVRSupported)
             {
-                if(device.deviceClass != VRModuleDeviceClass.GenericTracker)
+                if(!GetTrackerRoleFromNameSteamVR(device.modelNumber, out BodyRole role))
                     return;
-                if(!GetTrackerIDFromNameSteamVR(device.modelNumber, out TypeTracker role))
-                    return;
-                
-                switch (role)
-                {
-                    case TypeTracker.Foot_Left:
-                        SetRole(device, BodyRole.LeftFoot);
-                        break;
-                    case TypeTracker.Foot_Right:
-                        SetRole(device, BodyRole.RightFoot);
-                        break;
-                    case TypeTracker.Chest:
-                        SetRole(device, BodyRole.Hip);
-                        break;
-                }
+                SetRole(device, role);
             }
+#endif
         }
     }
     
-    bool GetTrackerIDFromNameWiwe(string nameTracker, out TrackerId id)
+    bool GetTrackerRoleFromNameWiwe(string nameTracker, out BodyRole role)
     {
-        id = TrackerId.Tracker0;
-
+        role = BodyRole.Chest;
         for (int i = 0; i < TrackerUtils.s_TrackerIds.Length; i++)
         {
             TrackerManager.Instance.GetTrackerDeviceName(TrackerUtils.s_TrackerIds[i], out string nameDevice);
             if (nameDevice == nameTracker)
             {
                 DebugVR.Log(nameDevice + " == " + nameTracker);
-                id = TrackerUtils.s_TrackerIds[i];
+                TrackerRole trackerRole = TrackerManager.Instance.GetTrackerRole(TrackerUtils.s_TrackerIds[i]);
+                switch (trackerRole)
+                {
+                    case TrackerRole.Foot_Left:
+                        role = BodyRole.LeftFoot;
+                        break;
+                    case TrackerRole.Foot_Right:
+                        role = BodyRole.RightFoot;
+                        break;
+                    case TrackerRole.Chest:
+                        role = BodyRole.Chest;
+                        break;
+                    case TrackerRole.Knee_Right:
+                        role = BodyRole.RightKnee;
+                        break;
+                    case TrackerRole.Knee_Left:
+                        role = BodyRole.LeftKnee;
+                        break;
+                    default:
+                        return false;
+                }
                 return true;
             }
         }
         return false;
     }
 
-
-    bool GetTrackerIDFromNameSteamVR(string serial, out TypeTracker role)
+#if VIU_OPENVR_SUPPORT
+    bool GetTrackerRoleFromNameSteamVR(string serial, out BodyRole role)
     {
-        role = TypeTracker.Chest;
+        role = BodyRole.Hip;
         uint deviceIndex = SteamVR_Actions.default_Pose.GetDeviceIndex(SteamVR_Input_Sources.LeftFoot);
         Debug.Log(OpenVR.System.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand));
         for (uint i = 0; i < 15; i++)
@@ -127,23 +111,33 @@ public class WiweRoleGetter : MonoBehaviour
                 switch (type)
                 {
                     case "vive_tracker_chest":
-                        role = TypeTracker.Chest;
+                        role = BodyRole.Chest;
                         break;
                     case "vive_tracker_right_foot":
-                        role = TypeTracker.Foot_Right;
+                        role = BodyRole.RightFoot;
                         break;
                     case "vive_tracker_left_foot":
-                        role = TypeTracker.Foot_Left;
+                        role = BodyRole.LeftFoot;
                         break;
+                    case "vive_tracker_right_knee":
+                        role = BodyRole.RightKnee;
+                        break;
+                    case "vive_tracker_left_knee":
+                        role = BodyRole.LeftKnee;
+                        break;
+                    case "vive_tracker_hip":
+                        role = BodyRole.Hip;
+                        break;
+                    default:
+                        return false;
                 }
-
                 return true;
             }
         }
-
         return false;
     }
-
+#endif
+    
     public void SetRole(IVRModuleDeviceState device, BodyRole role)
     {
         _map.BindDeviceToRoleValue(device.serialNumber, (int)role);

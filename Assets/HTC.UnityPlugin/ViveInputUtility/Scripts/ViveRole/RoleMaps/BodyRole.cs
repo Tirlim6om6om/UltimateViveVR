@@ -16,7 +16,10 @@ namespace HTC.UnityPlugin.Vive
         LeftHand,
         RightFoot,
         LeftFoot,
+        RightKnee,
+        LeftKnee,
         Hip,
+        Chest,
     }
 
     internal class BodyRoleIntReslver : EnumToIntResolver<BodyRole> { public override int Resolve(BodyRole e) { return (int)e; } }

@@ -4,23 +4,27 @@ using Valve.VR;
 
 public class DebugVR : MonoBehaviour
 {
-    public static DebugVR Instance;
+    private static DebugVR instance;
     public TextMeshProUGUI textLog;
     
     private void Awake()
     {
-        if (Instance)
+        if (instance)
         {
-            Destroy(Instance);
+            Destroy(instance);
         }
         else
         {
-            Instance = this;
+            instance = this;
         }
     }
 
     public static void Log(string text)
     {
-        Instance.textLog.text = text + "\n" + Instance.textLog.text;
+        if(!instance)
+            return;
+        Debug.Log(text);
+        if(instance.textLog)
+            instance.textLog.text = text + "\n" + instance.textLog.text;
     }
 }
