@@ -85,7 +85,7 @@ MonoBehaviour:
   m_enableOculusSDKControllerRenderModel: 1
   m_enableOculusSDKControllerRenderModelSkeleton: 0
   m_oculusVRControllerPrefab: {fileID: 0}
-  m_activateSteamVRModule: 0
+  m_activateSteamVRModule: 1
   m_steamVRLeftSkeletonMode: -1
   m_steamVRRightSkeletonMode: -1
   m_activateSimulatorModule: 1
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_activateUnityNativeVRModule: 1
   m_activateUnityXRModule: 0
   m_preferUnityXRPointerPose: 0
-  m_activateWaveVRModule: 1
+  m_activateWaveVRModule: 0
   m_simulateWaveVR6DoFController: 1
   m_waveVRAddVirtualArmTo3DoFController: 1
   m_waveVRVirtualNeckPosition: {x: 0, y: -0.15, z: 0}

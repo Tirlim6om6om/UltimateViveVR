@@ -11,7 +11,7 @@ namespace BCS.CORE.VR.Network
     public class PosesNet
     {
         [SerializeField] private Transform posLocal;
-        [SerializeField] private NetworkTransformReliable posNet;
+        [SerializeField] private NetworkTransformUnreliable posNet;
 
         public void Sync()
         {
