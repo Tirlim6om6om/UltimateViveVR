@@ -11,11 +11,11 @@ namespace BCS.CORE.VR.Network
     public class PosesNet
     {
         [SerializeField] private Transform posLocal;
-        [SerializeField] private NetworkTransformUnreliable posNet;
+        [SerializeField] private GameObject posNet;
 
         public void Sync()
         {
-            posNet.target = posLocal;
+            posNet.GetComponent<NetworkTransformBase>().target = posLocal;
         }
     }
     
