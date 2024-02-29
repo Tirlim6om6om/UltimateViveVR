@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using BCS.CORE.VR.Network.Example;
 using HTC.UnityPlugin.Vive;
 using HTC.UnityPlugin.VRModuleManagement;
 using UnityEngine;
+using UnityEngine.Events;
 #if VIU_OPENVR_SUPPORT
 using HTC.UnityPlugin.Vive.SteamVRExtension;
 using Valve.VR;
@@ -11,9 +15,44 @@ using TrackerRole = Wave.Essence.Tracker.TrackerRole;
 
 namespace BCS.CORE.VR
 {
+    public class TrackerRoleState
+    {
+        public BodyRole role;
+        public UnityEvent<bool> changeActive = new UnityEvent<bool>();
+        private GameObject obj;
+        
+        public TrackerRoleState(GameObject obj, BodyRole role)
+        {
+            this.obj = obj;
+            this.role = role;
+            //DebugVR.Log("Virtual tracker role: " + role);
+        }
+
+        public void SetActive(bool active)
+        {
+            obj.SetActive(active);
+            changeActive?.Invoke(active);
+        }
+
+        public bool GetActive() => obj.activeSelf;
+    }
+    
     public class TrackerRoleSetup : MonoBehaviour
     {
+        [SerializeField] private List<ViveRoleSetter> trackers;
         private ViveRole.IMap _map;
+        public List<TrackerRoleState> _trackersRole = new List<TrackerRoleState>();
+        [HideInInspector] public bool done;
+        private void Awake()
+        {
+            foreach (var tracker in trackers)
+            {
+                var trackerRoleState = new TrackerRoleState(tracker.gameObject, (BodyRole) tracker.viveRole.roleValue);
+                trackerRoleState.SetActive(false);
+                _trackersRole.Add(trackerRoleState);
+            }
+        }
+
 
         private void Start()
         {
@@ -22,7 +61,8 @@ namespace BCS.CORE.VR
             {
                 gameObject.AddComponent<TrackerManager>().InitialStartTracker = true;
             }
-
+            
+            //DebugVR.Log("START INIT TRACKERS");
             StartCoroutine(WaitInit());
         }
 
@@ -36,6 +76,7 @@ namespace BCS.CORE.VR
 #if VIU_OPENVR_SUPPORT
         yield return new WaitUntil(() => SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess);
 #endif
+            DebugVR.Log("START SETUP TRACKERS");
             for (uint deviceIndex = 0, imax = VRModule.GetDeviceStateCount(); deviceIndex < imax; ++deviceIndex)
             {
                 if (VRModule.GetCurrentDeviceState(deviceIndex).isConnected)
@@ -43,16 +84,18 @@ namespace BCS.CORE.VR
                     OnDeviceConnected(deviceIndex, true);
                 }
             }
+
+            done = true;
             VRModule.onDeviceConnected += OnDeviceConnected;
         }
 
         private void OnDeviceConnected(uint deviceIndex, bool connected)
         {
             var device = VRModule.GetCurrentDeviceState(deviceIndex);
+            //DebugVR.Log("Get device: " + device.modelNumber);
             if (device.isConnected)
             {
-                if (device.deviceClass != VRModuleDeviceClass.GenericTracker)
-                    return;
+                //DebugVR.Log("Try set device: " + device.serialNumber + " id: " + deviceIndex);
                 if (VRModule.isWaveVRSupported)
                 {
                     if (!GetTrackerRoleFromNameWiwe(device.modelNumber.Split(' ')[0], out BodyRole role))
@@ -150,7 +193,14 @@ namespace BCS.CORE.VR
         private void SetRole(IVRModuleDeviceState device, BodyRole role)
         {
             _map.BindDeviceToRoleValue(device.serialNumber, (int) role);
-            Debug.Log("Device: " + device.serialNumber + " role: " + role + "\n");
+            DebugVR.Log("Device: " + device.serialNumber + " role: " + role + "\n");
+            foreach (var tracker in _trackersRole)
+            {
+                if (tracker.role == role)
+                {
+                    tracker.SetActive(true);
+                }
+            }
         }
     }
 }

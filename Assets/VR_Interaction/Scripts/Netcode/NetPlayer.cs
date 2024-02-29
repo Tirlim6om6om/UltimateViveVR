@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace BCS.CORE.VR.Network
     {
         [SerializeField] private GameObject playerLocal;
         [SerializeField] private GameObject playerNetwork;
+        [SerializeField] private List<NetworkTransformBase> transformBases;
         private bool _local;
         
         
@@ -15,15 +17,17 @@ namespace BCS.CORE.VR.Network
         {
             _local = true;
             // playerNetwork.SetActive(!_local);
-            TryGetComponent(out NetworkTransformReliable component);
-            if (isServer)
+            foreach (var component in transformBases)
             {
-                component.syncDirection = SyncDirection.ServerToClient;
-                component.syncMode = SyncMode.Observers;
-            }
-            else
-            {
-                component.syncDirection = SyncDirection.ClientToServer;
+                if (isServer)
+                {
+                    component.syncDirection = SyncDirection.ServerToClient;
+                    component.syncMode = SyncMode.Observers;
+                }
+                else
+                {
+                    component.syncDirection = SyncDirection.ClientToServer;
+                }
             }
         }
 

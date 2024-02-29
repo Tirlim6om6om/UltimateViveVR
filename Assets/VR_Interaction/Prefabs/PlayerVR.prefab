@@ -502,7 +502,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_mode: 1
   m_viveRole:
-    m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
+    m_roleTypeFullName: HTC.UnityPlugin.Vive.ControllerRole
     m_roleValueName: LeftHand
     m_roleValueInt: 0
   m_deviceIndex: 0
@@ -716,6 +716,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729af4c709e976648887f37a8a36087b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trackers:
+  - {fileID: 3891256112405076846}
+  - {fileID: 3891256113249177637}
 --- !u!1 &3891256112217801888
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,9 +766,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_viveRole:
-    m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
+    m_roleTypeFullName: HTC.UnityPlugin.Vive.ControllerRole
     m_roleValueName: LeftHand
-    m_roleValueInt: 0
+    m_roleValueInt: 1
 --- !u!114 &3891256112210703648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -782,7 +785,7 @@ MonoBehaviour:
   rotOffset: {x: 0, y: 0, z: 0}
   m_origin: {fileID: 0}
   m_viveRole:
-    m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
+    m_roleTypeFullName: HTC.UnityPlugin.Vive.ControllerRole
     m_roleValueName: LeftHand
     m_roleValueInt: 0
   m_onIsValidChanged:
@@ -834,7 +837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_mode: 1
   m_viveRole:
-    m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
+    m_roleTypeFullName: HTC.UnityPlugin.Vive.ControllerRole
     m_roleValueName: RightHand
     m_roleValueInt: 0
   m_deviceIndex: 0
@@ -939,7 +942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_viveRole:
-    m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
+    m_roleTypeFullName: HTC.UnityPlugin.Vive.ControllerRole
     m_roleValueName: RightHand
     m_roleValueInt: 0
 --- !u!114 &3891256112210714016
@@ -958,7 +961,7 @@ MonoBehaviour:
   rotOffset: {x: 0, y: 0, z: 0}
   m_origin: {fileID: 0}
   m_viveRole:
-    m_roleTypeFullName: HTC.UnityPlugin.Vive.HandRole
+    m_roleTypeFullName: HTC.UnityPlugin.Vive.ControllerRole
     m_roleValueName: RightHand
     m_roleValueInt: 0
   m_onIsValidChanged:
