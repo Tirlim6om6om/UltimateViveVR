@@ -12,7 +12,7 @@ namespace BCS.CORE.VR.Network
     [Serializable]
     public class PosesNet
     {
-        [SerializeField] private Transform posLocal;
+        public Transform posLocal;
         public GameObject posNet;
         private PlayerRigController _playerRig;
         private BodyRole _role;
@@ -20,27 +20,6 @@ namespace BCS.CORE.VR.Network
         public void Sync()
         {
             posNet.GetComponent<NetworkTransformBase>().target = posLocal;
-        }
-
-        public void SetTrackerRole(TrackerRoleSetup trackerRoleSetup, PlayerRigController playerRigController)
-        {
-            _playerRig = playerRigController;
-            if (!posLocal.TryGetComponent(out VivePoseTracker roleSetter)) return;
-            DebugVR.Log( ((BodyRole)roleSetter.viveRole.roleValue).ToString());
-            _role = (BodyRole)roleSetter.viveRole.roleValue;
-            foreach (var tracker in trackerRoleSetup._trackersRole)
-            {
-                if (tracker.role == _role)
-                {
-                    tracker.changeActive.AddListener(SetActive);
-                    SetActive(tracker.GetActive());
-                }
-            }
-        }
-        
-        private void SetActive(bool active)
-        {
-            _playerRig.SetActiveToObj(_role, active);
         }
     }
 
@@ -72,13 +51,33 @@ namespace BCS.CORE.VR.Network
         {
             yield return new WaitUntil(() => trackerRoleSetup.done);
             yield return new WaitForSeconds(0.1f);
-            foreach (var pose in poses)
+            while (true)
             {
-                pose.SetTrackerRole(trackerRoleSetup, this);
+                foreach (var pose in poses)
+                {
+                    if (pose.posLocal.TryGetComponent(out VivePoseTracker roleSetter))
+                    {
+                        DebugVR.Log(((BodyRole) roleSetter.viveRole.roleValue).ToString());
+                        BodyRole role = (BodyRole) roleSetter.viveRole.roleValue;
+                        foreach (var tracker in trackerRoleSetup._trackersRole)
+                        {
+                            if (tracker.role == role)
+                            {
+                                DebugVR.Log(((BodyRole) roleSetter.viveRole.roleValue +
+                                             " : " + tracker.GetActive()));
+                                SetActiveToObj(role, tracker.GetActive());
+                            }
+                        }
+                    }
+                }
+
+                yield return new WaitForSeconds(1);
             }
         }
-
-        [TargetRpc]
+    
+        
+        [Command]
+        [ClientRpc]
         public void SetActiveToObj(BodyRole role, bool active)
         {
             foreach (var pos in poses)
