@@ -338,7 +338,7 @@ MonoBehaviour:
   port: 4444
   DualMode: 1
   NoDelay: 1
-  Interval: 10
+  Interval: 2
   Timeout: 10000
   RecvBufferSize: 7361536
   SendBufferSize: 7361536

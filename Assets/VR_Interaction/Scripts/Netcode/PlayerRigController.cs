@@ -1,58 +1,20 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using BCS.CORE.VR.Network.Example;
 using HTC.UnityPlugin.Vive;
-using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 
 namespace BCS.CORE.VR.Network
 {
-    [Serializable]
-    public class PosesNet
-    {
-        public Transform posLocal;
-        public GameObject posNet;
-        [HideInInspector]public PlayerRigController playerRigController;
-
-        public void Sync()
-        {
-            posNet.GetComponent<NetworkTransformBase>().target = posLocal;
-        }
-        
-        public void OnChangeActive(bool active){
-            if (posNet.TryGetComponent(out RoleSet roleSet))
-            {
-                playerRigController.SetActiveToObj(roleSet.bodyRole, active);
-            }
-        }
-    }
-    
-    [Serializable]
-    public struct BodyActive
-    {
-        public int role;
-        public bool active;
-
-        public BodyActive(int role, bool active)
-        {
-            this.role = role;
-            this.active = active;
-        }
-
-        public override string ToString()
-        {
-            return "Role: " + role + " active: " + active;
-        }
-    }
-
+    /// <summary>
+    /// Синхронизация нетворк и локального игрока
+    /// </summary>
     public class PlayerRigController : NetworkBehaviour
     {
         [SerializeField] private List<PosesNet> poses;
         [SerializeField] private List<GameObject> visuals;
         [SerializeField] private TrackerRoleSetup trackerRoleSetup;
-        public SyncList<BodyActive> bodyActives = new SyncList<BodyActive>();
+        private readonly SyncList<BodyActive> _bodyActives = new SyncList<BodyActive>();
 
         public override void OnStartAuthority()
         {
@@ -73,12 +35,12 @@ namespace BCS.CORE.VR.Network
             {
                 foreach (var pose in poses)
                 {
-                    if (pose.posNet.TryGetComponent(out RoleSet roleSet))
+                    if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
                     {
-                        DebugVR.Log("Bodies: " + bodyActives.Count.ToString());
+                        DebugVR.Log("Bodies: " + _bodyActives.Count.ToString());
                         int id = GetRole(roleSet.bodyRole);
-                        if(id < bodyActives.Count)
-                            pose.posNet.SetActive(bodyActives[GetRole(roleSet.bodyRole)].active);
+                        if(id < _bodyActives.Count)
+                            pose.posNet.SetActive(_bodyActives[GetRole(roleSet.bodyRole)].active);
                     }
                 }
                 return;
@@ -93,15 +55,13 @@ namespace BCS.CORE.VR.Network
             foreach (var pose in poses)
             {
                 pose.Sync();
-                if (pose.posNet.TryGetComponent(out RoleSet roleSet))
+                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
                 {
-                    bodyActives.Add(new BodyActive((int)roleSet.bodyRole, true));   
+                    _bodyActives.Add(new BodyActive((int)roleSet.bodyRole, true));   
                 }
             }
             StartCoroutine(WaitTrackers());
         }
-        
-        
 
         private IEnumerator WaitTrackers()
         {
@@ -138,14 +98,14 @@ namespace BCS.CORE.VR.Network
         {
             foreach (var pose in poses)
             {
-                if (pose.posNet.TryGetComponent(out RoleSet roleSetter))
+                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSetter))
                 {
                     if (roleSetter.bodyRole == role)
                     {
                         DebugVR.Log("SetActive RPC: " + pose.posNet.name + " : " + active);
                         pose.posNet.SetActive(active);
                         if(isOwned)
-                            bodyActives[GetRole(role)] = new BodyActive((int) role, active);
+                            _bodyActives[GetRole(role)] = new BodyActive((int) role, active);
                     }
                 }
             }
@@ -153,9 +113,9 @@ namespace BCS.CORE.VR.Network
 
         private int GetRole(BodyRole role)
         {
-            for (int i = 0; i < bodyActives.Count; i++)
+            for (int i = 0; i < _bodyActives.Count; i++)
             {
-                if ((BodyRole) bodyActives[i].role == role)
+                if ((BodyRole) _bodyActives[i].role == role)
                 {
                     return i;
                 }

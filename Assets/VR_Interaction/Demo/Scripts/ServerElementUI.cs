@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Mirror;
 using Mirror.Discovery;
 using UnityEngine;
 using UnityEngine.UI;

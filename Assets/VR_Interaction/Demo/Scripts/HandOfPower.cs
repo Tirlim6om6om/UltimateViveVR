@@ -1,45 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class HandOfPower : NetworkBehaviour
+namespace BCS.CORE.VR.Network.Example
 {
-    private Vector3 lastpos;
-    private Quaternion lastrot;
-    private float power;
+    public class HandOfPower : NetworkBehaviour
+    {
+        private Vector3 lastpos;
+        private Quaternion lastrot;
+        private float power;
 
-    // Update is called once per frame
-    void Update()
-    {
-        power = Mathf.Lerp(Vector3.Distance(lastpos, transform.position) * 1 + Quaternion.Angle(lastrot, transform.rotation) * .25f, power, Time.deltaTime);
-        power -= .25f;
-        power *= 3;
-        lastrot = transform.rotation;
-        lastpos = transform.position;
-    }
-    
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.transform.CompareTag("ball"))
+        // Update is called once per frame
+        void Update()
         {
-            Kick(other.gameObject, power, transform.position);
+            power = Mathf.Lerp(
+                Vector3.Distance(lastpos, transform.position) * 1 +
+                Quaternion.Angle(lastrot, transform.rotation) * .25f, power, Time.deltaTime);
+            power -= .25f;
+            power *= 3;
+            lastrot = transform.rotation;
+            lastpos = transform.position;
         }
-    }
 
-    [Command]
-    public void Kick(GameObject other, float powerInput, Vector3 pos)
-    {
-        if (powerInput > 0)
+        private void OnTriggerEnter(Collider other)
         {
-            other.transform.GetComponent<Rigidbody>().AddExplosionForce(powerInput, pos, 1, .175f, ForceMode.Impulse);
-            Vector3 vel = Quaternion.EulerAngles(pos - other.transform.position) * new Vector3(0, 90, 0) * powerInput * 2;
-            other.transform.GetComponent<Rigidbody>().angularVelocity = vel;
+            if (other.transform.CompareTag("ball"))
+            {
+                Kick(other.gameObject, power, transform.position);
+            }
         }
-        else 
+
+        public void Kick(GameObject other, float powerInput, Vector3 pos)
         {
-            other.transform.GetComponent<Rigidbody>().velocity *= -.1f;
+            if (powerInput > 0)
+            {
+                other.transform.GetComponent<Rigidbody>()
+                    .AddExplosionForce(powerInput, pos, 1, .175f, ForceMode.Impulse);
+                Vector3 vel = Quaternion.EulerAngles(pos - other.transform.position) * new Vector3(0, 90, 0) *
+                              powerInput * 2;
+                other.transform.GetComponent<Rigidbody>().angularVelocity = vel;
+            }
+            else
+            {
+                other.transform.GetComponent<Rigidbody>().velocity *= -.1f;
+            }
         }
     }
 }

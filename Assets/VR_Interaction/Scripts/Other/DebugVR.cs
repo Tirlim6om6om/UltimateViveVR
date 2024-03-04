@@ -1,33 +1,33 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BCS.CORE.VR.Network.Example
+namespace BCS.CORE.VR
 {
+    /// <summary>
+    /// Класс дебага для вр (выводит на текст, если он есть)
+    /// </summary>
     public class DebugVR : MonoBehaviour
     {
         public Text textLog;
-        private static DebugVR instance;
+        private static DebugVR _instance;
         
         private void Awake()
         {
-            if (instance)
+            if (_instance)
             {
                 Destroy(this);
             }
             else
             {
-                instance = this;
+                _instance = this;
             }
         }
 
         public static void Log(string message)
         {
             Debug.Log("DebugVR: " + message);
-            if(instance && instance.textLog)
-                instance.textLog.text = message + '\n' + instance.textLog.text;
+            if(_instance && _instance.textLog)
+                _instance.textLog.text = message + '\n' + _instance.textLog.text;
         }
     }
 }

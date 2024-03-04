@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using HTC.UnityPlugin.VRModuleManagement;
 using Mirror;
 using UnityEngine;
-using Wave.Essence;
-using Wave.Native;
 
 public class Spawner : NetworkBehaviour
 {

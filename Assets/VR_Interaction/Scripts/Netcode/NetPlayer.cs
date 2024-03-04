@@ -1,22 +1,28 @@
-using System;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
 namespace BCS.CORE.VR.Network
 {
+    /// <summary>
+    /// Определение локального игрока и хоста
+    /// </summary>
     public class NetPlayer : NetworkBehaviour
     {
         [SerializeField] private GameObject playerLocal;
-        [SerializeField] private GameObject playerNetwork;
-        [SerializeField] private List<NetworkTransformBase> transformBases;
-        private bool _local;
-        
-        
+        [SerializeField] private List<GameObject> transformNetworks;
+
         public override void OnStartAuthority()
         {
-            _local = true;
-            // playerNetwork.SetActive(!_local);
+            List<NetworkTransformBase> transformBases = new List<NetworkTransformBase>();
+            foreach (var transformObj in transformNetworks)
+            {
+                if (transformObj.TryGetComponent(out NetworkTransformBase transformBase))
+                {
+                    transformBases.Add(transformBase);
+                }
+            }
+            
             foreach (var component in transformBases)
             {
                 if (isServer)
@@ -38,8 +44,7 @@ namespace BCS.CORE.VR.Network
 
         public override void OnStopAuthority()
         {
-            this.enabled = false;
-            _local = false;
+            enabled = false;
         }
     }
 }
