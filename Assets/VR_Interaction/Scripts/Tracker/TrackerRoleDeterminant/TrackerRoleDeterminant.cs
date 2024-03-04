@@ -12,6 +12,7 @@ namespace BCS.CORE.VR
 #if VIU_OPENVR_SUPPORT
             return obj.AddComponent<TrackerRoleSteam>();
 #endif
+            return null;
         }
     }
 }
