@@ -3,29 +3,28 @@ using UnityEngine;
 
 namespace BCS.CORE.VR.Network.Example
 {
-    public class HandOfPower : NetworkBehaviour
+    public class Kicker : NetworkBehaviour
     {
-        private Vector3 lastpos;
-        private Quaternion lastrot;
-        private float power;
+        private Vector3 _lastpos;
+        private Quaternion _lastrot;
+        private float _power;
 
-        // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
-            power = Mathf.Lerp(
-                Vector3.Distance(lastpos, transform.position) * 1 +
-                Quaternion.Angle(lastrot, transform.rotation) * .25f, power, Time.deltaTime);
-            power -= .25f;
-            power *= 3;
-            lastrot = transform.rotation;
-            lastpos = transform.position;
+            _power = Mathf.Lerp(
+                Vector3.Distance(_lastpos, transform.position) * 1 +
+                Quaternion.Angle(_lastrot, transform.rotation) * .25f, _power, Time.fixedDeltaTime);
+            _power -= .25f;
+            _power *= 3;
+            _lastrot = transform.rotation;
+            _lastpos = transform.position;
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.transform.CompareTag("ball"))
             {
-                Kick(other.gameObject, power, transform.position);
+                Kick(other.gameObject, _power, transform.position);
             }
         }
 

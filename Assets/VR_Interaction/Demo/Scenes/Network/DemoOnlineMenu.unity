@@ -256,7 +256,7 @@ MonoBehaviour:
   runInBackground: 1
   headlessStartMode: 1
   editorAutoStart: 0
-  sendRate: 90
+  sendRate: 120
   autoStartServerBuild: 0
   autoConnectClientBuild: 0
   offlineScene: 
@@ -275,7 +275,7 @@ MonoBehaviour:
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
-    bufferLimit: 32
+    bufferLimit: 128
     catchupNegativeThreshold: -1
     catchupPositiveThreshold: 1
     catchupSpeed: 0.019999999552965164

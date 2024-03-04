@@ -11,6 +11,7 @@ namespace BCS.CORE.VR.Network
     /// </summary>
     public class PlayerRigController : NetworkBehaviour
     {
+        [SerializeField] private GameObject playerLocal;
         [SerializeField] private List<PosesNet> poses;
         [SerializeField] private List<GameObject> visuals;
         [SerializeField] private TrackerRoleSetup trackerRoleSetup;
@@ -46,6 +47,7 @@ namespace BCS.CORE.VR.Network
                 return;
             }
 
+            playerLocal.SetActive(isLocalPlayer);
             foreach (var visual in visuals)
             {
                 Destroy(visual);
@@ -54,10 +56,23 @@ namespace BCS.CORE.VR.Network
             
             foreach (var pose in poses)
             {
-                pose.Sync();
+                pose.SetTarget();
                 if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
                 {
                     _bodyActives.Add(new BodyActive((int)roleSet.bodyRole, true));   
+                }
+
+                if (pose.posNet.TryGetComponent(out NetworkTransformBase transformBase))
+                {
+                    if (isServer)
+                    {
+                        transformBase.syncDirection = SyncDirection.ServerToClient;
+                        transformBase.syncMode = SyncMode.Observers;
+                    }
+                    else
+                    {
+                        transformBase.syncDirection = SyncDirection.ClientToServer;
+                    }
                 }
             }
             StartCoroutine(WaitTrackers());

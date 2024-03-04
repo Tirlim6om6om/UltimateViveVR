@@ -14,7 +14,7 @@ namespace BCS.CORE.VR.Network
         public GameObject posNet;
         [HideInInspector] public PlayerRigController playerRigController;
 
-        public void Sync()
+        public void SetTarget()
         {
             posNet.GetComponent<NetworkTransformBase>().target = posLocal;
         }

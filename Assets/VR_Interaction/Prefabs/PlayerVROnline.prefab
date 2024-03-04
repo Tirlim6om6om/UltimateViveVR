@@ -77,9 +77,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6838578427865239918}
   - component: {fileID: 2202696984245569902}
-  - component: {fileID: 7589530196878890186}
-  - component: {fileID: 4213246375321265585}
   - component: {fileID: 284118447059546279}
+  - component: {fileID: 4213246375321265585}
   m_Layer: 0
   m_Name: PlayerVROnline
   m_TagString: Untagged
@@ -122,67 +121,6 @@ MonoBehaviour:
   serverOnly: 0
   visible: 2
   hasSpawned: 0
---- !u!114 &7589530196878890186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1344759138524807240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adf3070157be74141bd0f5aa5a7ced16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  playerLocal: {fileID: 1262887333347677627}
-  transformNetworks:
-  - {fileID: 1344759138524807240}
-  - {fileID: 2559251841834550945}
-  - {fileID: 8265583839302721940}
-  - {fileID: 1221851327265884545}
-  - {fileID: 6878505348389756346}
-  - {fileID: 5038058565588932433}
---- !u!114 &4213246375321265585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1344759138524807240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c23d96ae767b4449c8238dd5a73e9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 1
-  syncMode: 0
-  syncInterval: 0.1
-  poses:
-  - posLocal: {fileID: 1262887333347448563}
-    posNet: {fileID: 2559251841834550945}
-    playerRigController: {fileID: 0}
-  - posLocal: {fileID: 1262887333347383253}
-    posNet: {fileID: 8265583839302721940}
-    playerRigController: {fileID: 0}
-  - posLocal: {fileID: 1262887333347420589}
-    posNet: {fileID: 1221851327265884545}
-    playerRigController: {fileID: 0}
-  - posLocal: {fileID: 1262887333904025009}
-    posNet: {fileID: 6878505348389756346}
-    playerRigController: {fileID: 0}
-  - posLocal: {fileID: 1262887334379032318}
-    posNet: {fileID: 5038058565588932433}
-    playerRigController: {fileID: 0}
-  visuals:
-  - {fileID: 6951332858530086542}
-  - {fileID: 6291708322137274862}
-  - {fileID: 5499566841567193539}
-  - {fileID: 6390243103013122113}
-  - {fileID: 3978338122572145322}
-  trackerRoleSetup: {fileID: 1262887333347677620}
 --- !u!114 &284118447059546279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,10 +151,49 @@ MonoBehaviour:
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChange: 1
   onlySyncOnChangeCorrectionMultiplier: 1
-  rotationSensitivity: 0.002
+  rotationSensitivity: 0.01
   compressRotation: 0
   positionPrecision: 0.0001
   scalePrecision: 0.01
+--- !u!114 &4213246375321265585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344759138524807240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c23d96ae767b4449c8238dd5a73e9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0.5
+  playerLocal: {fileID: 1262887333347677627}
+  poses:
+  - posLocal: {fileID: 1262887333347448563}
+    posNet: {fileID: 2559251841834550945}
+    playerRigController: {fileID: 0}
+  - posLocal: {fileID: 1262887333347383253}
+    posNet: {fileID: 8265583839302721940}
+    playerRigController: {fileID: 0}
+  - posLocal: {fileID: 1262887333347420589}
+    posNet: {fileID: 1221851327265884545}
+    playerRigController: {fileID: 0}
+  - posLocal: {fileID: 1262887333904025009}
+    posNet: {fileID: 6878505348389756346}
+    playerRigController: {fileID: 0}
+  - posLocal: {fileID: 1262887334379032318}
+    posNet: {fileID: 5038058565588932433}
+    playerRigController: {fileID: 0}
+  visuals:
+  - {fileID: 6951332858530086542}
+  - {fileID: 6291708322137274862}
+  - {fileID: 5499566841567193539}
+  - {fileID: 6390243103013122113}
+  - {fileID: 3978338122572145322}
+  trackerRoleSetup: {fileID: 1262887333347677620}
 --- !u!1 &2559251841834550945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,19 +1094,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3891256112405076845, guid: 6cf9267c60cba494f8a8fd86d4ba1dab, type: 3}
   m_PrefabInstance: {fileID: 2848009476660289245}
   m_PrefabAsset: {fileID: 0}
---- !u!135 &4405090450763557070
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1262887333904025008}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.15
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &1701376898871147768
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1142,6 +1106,19 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.17
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &4405090450763557070
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262887333904025008}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.15
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4561587505780496557
 MonoBehaviour:
@@ -1168,19 +1145,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3891256113249177632, guid: 6cf9267c60cba494f8a8fd86d4ba1dab, type: 3}
   m_PrefabInstance: {fileID: 2848009476660289245}
   m_PrefabAsset: {fileID: 0}
---- !u!135 &7795112161451359914
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1262887334379032317}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.15
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &418369197674662745
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1193,6 +1157,19 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.17
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &7795112161451359914
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262887334379032317}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.15
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6928967400943470092
 MonoBehaviour:
