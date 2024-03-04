@@ -5,7 +5,7 @@ using TrackerRole = Wave.Essence.Tracker.TrackerRole;
 
 namespace BCS.CORE.VR
 {
-    public class TrackerRoleWawe : TrackerRoleDeterminant
+    public class TrackerRoleWawe : TrackerRoleBase
     {
         public override void Init()
         {

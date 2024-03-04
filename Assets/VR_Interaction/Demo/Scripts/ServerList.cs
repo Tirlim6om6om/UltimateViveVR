@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Mirror;
 using Mirror.Discovery;
@@ -47,5 +46,15 @@ namespace BCS.CORE.VR.Network.Example
             networkDiscovery.AdvertiseServer();
             onConnected.Invoke();
         }
+
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                Host();
+            }
+        }
+#endif
     }
 }

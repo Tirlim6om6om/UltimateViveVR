@@ -211,6 +211,8 @@ namespace Mirror
             // if we are 'inside' the object then don't show ghost.
             // otherwise it just looks like z-fighting the whole time.
             // TODO optimize this later
+            if(!visualCopy) 
+                return;
             bool insideTarget = Vector3.Distance(transform.position, visualCopy.transform.position) <= ghostDistanceThreshold;
             foreach (MeshRenderer rend in GetComponentsInChildren<MeshRenderer>())
             {

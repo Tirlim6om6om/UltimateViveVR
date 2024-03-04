@@ -1,30 +1,17 @@
-﻿using HTC.UnityPlugin.Vive;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BCS.CORE.VR
 {
-    /// <summary>
-    /// Класс, определяющий роли от фреймворка
-    /// </summary>
-    public abstract class TrackerRoleDeterminant : MonoBehaviour
+    public class TrackerRoleDeterminant : MonoBehaviour
     {
-        /// <summary>
-        /// Инициализация фреймворка трекеров
-        /// </summary>
-        public abstract void Init();
-        
-        /// <summary>
-        /// Фреймворк готов к работе
-        /// </summary>
-        /// <returns></returns>
-        public abstract bool IsReady();
-        
-        /// <summary>
-        /// Получение роли трекеров по имени
-        /// </summary>
-        /// <param name="modelNumber">номер модели</param>
-        /// <param name="role">роль на выход</param>
-        /// <returns></returns>
-        public abstract bool GetTrackerRoleFromName(string modelNumber, out BodyRole role);
+        public static TrackerRoleBase GetTrackerRoleFramework(GameObject obj)
+        {
+#if VIU_WAVEVR_SUPPORT
+            return obj.AddComponent<TrackerRoleWawe>();
+#endif
+#if VIU_OPENVR_SUPPORT
+            return obj.AddComponent<TrackerRoleSteam>();
+#endif
+        }
     }
 }

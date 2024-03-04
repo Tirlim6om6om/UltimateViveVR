@@ -37,7 +37,7 @@ namespace BCS.CORE.VR.Network
                 {
                     if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
                     {
-                        DebugVR.Log("Bodies: " + _bodyActives.Count.ToString());
+                        DebugVR.Log("Bodies: " + _bodyActives.Count);
                         int id = GetRole(roleSet.bodyRole);
                         if(id < _bodyActives.Count)
                             pose.posNet.SetActive(_bodyActives[GetRole(roleSet.bodyRole)].active);

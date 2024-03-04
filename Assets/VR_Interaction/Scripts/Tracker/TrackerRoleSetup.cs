@@ -16,16 +16,11 @@ namespace BCS.CORE.VR
         [SerializeField] private List<ViveRoleSetter> trackers;
         private ViveRole.IMap _map;
         private List<string> _modelsNumber = new List<string>();
-        private TrackerRoleDeterminant _trackerRoleDeterminant;
+        private TrackerRoleBase _trackerRoleBase;
 
         private void Awake()
         {
-#if VIU_WAVEVR_SUPPORT
-            _trackerRoleDeterminant = gameObject.AddComponent<TrackerRoleWawe>();
-#endif
-#if VIU_OPENVR_SUPPORT
-            _trackerRoleDeterminant = gameObject.AddComponent<TrackerRoleSteam>();
-#endif
+            _trackerRoleBase = TrackerRoleDeterminant.GetTrackerRoleFramework(gameObject);
             foreach (var tracker in trackers)
             {
                 var trackerRoleState = new TrackerRoleState(tracker.gameObject, (BodyRole) tracker.viveRole.roleValue);
@@ -37,13 +32,13 @@ namespace BCS.CORE.VR
         private void Start()
         {
             _map = ViveRole.GetMap<BodyRole>();
-            _trackerRoleDeterminant.Init();
+            _trackerRoleBase.Init();
             StartCoroutine(WaitInit());
         }
         
         private IEnumerator WaitInit()
         {
-            yield return new WaitUntil(() => _trackerRoleDeterminant.IsReady());
+            yield return new WaitUntil(() => _trackerRoleBase.IsReady());
             DebugVR.Log("START SETUP TRACKERS");
             for (uint deviceIndex = 0, imax = VRModule.GetDeviceStateCount(); deviceIndex < imax; ++deviceIndex)
             {
@@ -62,7 +57,7 @@ namespace BCS.CORE.VR
             if (connected)
             {
                 DebugVR.Log("Connected: " + device.modelNumber);
-                if (!_trackerRoleDeterminant.GetTrackerRoleFromName(device.modelNumber, out BodyRole role))
+                if (!_trackerRoleBase.GetTrackerRoleFromName(device.modelNumber, out BodyRole role))
                     return;
                 SetRole(device, role);
             }
@@ -102,7 +97,6 @@ namespace BCS.CORE.VR
                 if (tracker.GetActive() && tracker.modelNumber == modelNumber)
                     return tracker.role;
             }
-
             return BodyRole.Invalid;
         }
 

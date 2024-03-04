@@ -3,7 +3,7 @@
 namespace BCS.CORE.VR.Network
 {
     /// <summary>
-    /// Структура для синхронизации частей тела (вкл/выкл)
+    /// Структура для синхронизации активности частей тела (вкл/выкл)
     /// </summary>
     [Serializable]
     public struct BodyActive
