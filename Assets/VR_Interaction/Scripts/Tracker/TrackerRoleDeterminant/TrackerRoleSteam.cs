@@ -18,10 +18,10 @@ namespace BCS.CORE.VR
             role = BodyRole.Invalid;
             for (uint i = 0; i < 15; i++)
             {
-                if (SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i) == modelNumber)
+                string uid = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i);
+                if (uid == modelNumber)
                 {
-                    string type = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ControllerType_String, i);
-                    switch (type)
+                    switch (uid)
                     {
                         case "vive_tracker_chest":
                             role = BodyRole.Chest;

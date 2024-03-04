@@ -11,9 +11,13 @@ namespace BCS.CORE.VR
     /// </summary>
     public class TrackerRoleSetup : MonoBehaviour
     {
-        [HideInInspector] public bool done;
+
         public List<TrackerRoleState> trackersRole = new List<TrackerRoleState>();
+        
         [SerializeField] private List<ViveRoleSetter> trackers;
+
+        [HideInInspector] public bool done;
+
         private ViveRole.IMap _map;
         private List<string> _modelsNumber = new List<string>();
         private TrackerRoleBase _trackerRoleBase;
@@ -57,14 +61,17 @@ namespace BCS.CORE.VR
             if (connected)
             {
                 DebugVR.Log("Connected: " + device.modelNumber);
-                if (!_trackerRoleBase.GetTrackerRoleFromName(device.modelNumber, out BodyRole role))
-                    return;
-                SetRole(device, role);
+                if (_trackerRoleBase.GetTrackerRoleFromName(device.modelNumber, out BodyRole role))
+                {
+                    SetRole(device, role);
+                }
             }
             else
             {
                 string modelNumber = GetModelOfLostTracker();
+
                 DebugVR.Log("Disconnect: " + modelNumber);
+
                 BodyRole role = GetBodyRoleByModel(modelNumber);
                 DeleteRole(modelNumber, role);
             }
@@ -72,10 +79,10 @@ namespace BCS.CORE.VR
 
         private string GetModelOfLostTracker()
         {
-            
+            bool found;
             foreach (var serial in _modelsNumber)
             {
-                bool found = false;
+                found = false;
                 for (uint deviceIndex = 0, imax = VRModule.GetDeviceStateCount(); deviceIndex < imax; ++deviceIndex)
                 {
                     if (serial == VRModule.GetCurrentDeviceState(deviceIndex).modelNumber)
@@ -103,7 +110,7 @@ namespace BCS.CORE.VR
         private void SetRole(IVRModuleDeviceState device, BodyRole role)
         {
             _map.BindDeviceToRoleValue(device.serialNumber, (int) role);
-            DebugVR.Log("Device: " + device.serialNumber + " role: " + role + "\n");
+            DebugVR.Log($"Device: {device.serialNumber} role: {role}\n");
             _modelsNumber.Add(device.modelNumber);
             foreach (var tracker in trackersRole)
             {
