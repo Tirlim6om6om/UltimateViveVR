@@ -9,15 +9,18 @@ namespace BCS.CORE.VR
     {
         public override void Init()
         {
+            base.Init();
             gameObject.AddComponent<TrackerManager>().InitialStartTracker = true;
         }
 
-        public override bool IsReady() => TrackerManager.Instance;
+        protected override bool IsReady()
+        {
+            return TrackerManager.Instance;
+        }
         
-        public override bool GetTrackerRoleFromName(string modelNumber, out BodyRole role)
+        public override BodyRole GetTrackerRoleFromName(string modelNumber)
         {
             modelNumber = modelNumber.Split(' ')[0];
-            role = BodyRole.Chest;
             for (int i = 0; i < TrackerUtils.s_TrackerIds.Length; i++)
             {
                 TrackerManager.Instance.GetTrackerDeviceName(TrackerUtils.s_TrackerIds[i], out string nameDevice);
@@ -27,27 +30,21 @@ namespace BCS.CORE.VR
                     switch (trackerRole)
                     {
                         case TrackerRole.Foot_Left:
-                            role = BodyRole.LeftFoot;
-                            break;
+                            return BodyRole.LeftFoot;
                         case TrackerRole.Foot_Right:
-                            role = BodyRole.RightFoot;
-                            break;
+                            return BodyRole.RightFoot;
                         case TrackerRole.Chest:
-                            role = BodyRole.Chest;
-                            break;
+                            return BodyRole.Chest;
                         case TrackerRole.Knee_Right:
-                            role = BodyRole.RightKnee;
-                            break;
+                            return BodyRole.RightKnee;
                         case TrackerRole.Knee_Left:
-                            role = BodyRole.LeftKnee;
-                            break;
+                            return BodyRole.LeftKnee;
                         default:
-                            return false;
+                            return BodyRole.Invalid;
                     }
-                    return true;
                 }
             }
-            return false;
+            return BodyRole.Invalid;
         }
     }
 }

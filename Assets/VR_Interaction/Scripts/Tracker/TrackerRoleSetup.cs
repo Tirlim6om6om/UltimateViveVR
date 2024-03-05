@@ -12,59 +12,52 @@ namespace BCS.CORE.VR
     public class TrackerRoleSetup : MonoBehaviour
     {
 
-        public List<TrackerRoleState> trackersRole = new List<TrackerRoleState>();
+        public readonly List<TrackerRoleState> trackersRole = new List<TrackerRoleState>();
         
-        [SerializeField] private List<ViveRoleSetter> trackers;
-
-        [HideInInspector] public bool done;
-
+        [SerializeField] private List<ViveRoleSetter> trackersLocal;
+        
         private ViveRole.IMap _map;
-        private List<string> _modelsNumber = new List<string>();
+        private readonly List<string> _modelNames = new List<string>();
         private TrackerRoleBase _trackerRoleBase;
+        private bool _done;
 
         private void Awake()
         {
             _trackerRoleBase = TrackerRoleDeterminant.GetTrackerRoleFramework(gameObject);
-            foreach (var tracker in trackers)
+            foreach (var tracker in trackersLocal)
             {
-                var trackerRoleState = new TrackerRoleState(tracker.gameObject, (BodyRole) tracker.viveRole.roleValue);
+                TrackerRoleState trackerRoleState 
+                    = new TrackerRoleState(tracker.gameObject, (BodyRole) tracker.viveRole.roleValue);
                 trackerRoleState.SetActive(false);
                 trackersRole.Add(trackerRoleState);
             }
-        }
-        
-        private void Start()
-        {
             _map = ViveRole.GetMap<BodyRole>();
             _trackerRoleBase.Init();
-            StartCoroutine(WaitInit());
+            _trackerRoleBase.OnReady += Setup;
         }
-        
-        private IEnumerator WaitInit()
+
+        private void Setup()
         {
-            yield return new WaitUntil(() => _trackerRoleBase.IsReady());
             DebugVR.Log("START SETUP TRACKERS");
-            for (uint deviceIndex = 0, imax = VRModule.GetDeviceStateCount(); deviceIndex < imax; ++deviceIndex)
+            for (uint deviceIndex = 0; deviceIndex < VRModule.GetDeviceStateCount(); ++deviceIndex)
             {
                 if (VRModule.GetCurrentDeviceState(deviceIndex).isConnected)
                 {
                     OnDeviceConnected(deviceIndex, true);
                 }
             }
-            done = true;
+            _done = true;
             VRModule.onDeviceConnected += OnDeviceConnected;
+            _trackerRoleBase.OnReady -= Setup;
         }
 
         private void OnDeviceConnected(uint deviceIndex, bool connected)
         {
-            var device = VRModule.GetCurrentDeviceState(deviceIndex);
+            IVRModuleDeviceState device = VRModule.GetCurrentDeviceState(deviceIndex);
             if (connected)
             {
                 DebugVR.Log("Connected: " + device.modelNumber);
-                if (_trackerRoleBase.GetTrackerRoleFromName(device.modelNumber, out BodyRole role))
-                {
-                    SetRole(device, role);
-                }
+                SetRole(device, _trackerRoleBase.GetTrackerRoleFromName(device.modelNumber));
             }
             else
             {
@@ -79,29 +72,28 @@ namespace BCS.CORE.VR
 
         private string GetModelOfLostTracker()
         {
-            bool found;
-            foreach (var serial in _modelsNumber)
+            List<string> currentModelsName = new List<string>();
+            for (uint deviceIndex = 0; deviceIndex < VRModule.GetDeviceStateCount(); ++deviceIndex)
             {
-                found = false;
-                for (uint deviceIndex = 0, imax = VRModule.GetDeviceStateCount(); deviceIndex < imax; ++deviceIndex)
-                {
-                    if (serial == VRModule.GetCurrentDeviceState(deviceIndex).modelNumber)
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                    return serial;
+                currentModelsName.Add(VRModule.GetCurrentDeviceState(deviceIndex).modelNumber);
             }
+            
+            foreach (var modelName in _modelNames)
+            {
+                if (currentModelsName.Contains(modelName))
+                {
+                    return modelName;
+                }
+            }
+            
             return "";
         }
 
-        private BodyRole GetBodyRoleByModel(string modelNumber)
+        private BodyRole GetBodyRoleByModel(string modelName)
         {
             foreach (var tracker in trackersRole)
             {
-                if (tracker.GetActive() && tracker.modelNumber == modelNumber)
+                if (tracker.GetActive() && tracker.modelName == modelName)
                     return tracker.role;
             }
             return BodyRole.Invalid;
@@ -111,30 +103,35 @@ namespace BCS.CORE.VR
         {
             _map.BindDeviceToRoleValue(device.serialNumber, (int) role);
             DebugVR.Log($"Device: {device.serialNumber} role: {role}\n");
-            _modelsNumber.Add(device.modelNumber);
+            _modelNames.Add(device.modelNumber);
             foreach (var tracker in trackersRole)
             {
                 if (tracker.role == role)
                 {
                     tracker.SetActive(true);
-                    tracker.modelNumber = device.modelNumber;
+                    tracker.modelName = device.modelNumber;
                     break;
                 }
             }
         }
 
-        private void DeleteRole(string modelNumber, BodyRole role)
+        private void DeleteRole(string modelName, BodyRole role)
         {
             _map.UnbindRoleValue((int)role);
-            _modelsNumber.Remove(modelNumber);
+            _modelNames.Remove(modelName);
             foreach (var tracker in trackersRole)
             {
-                if (tracker.modelNumber == modelNumber)
+                if (tracker.modelName == modelName)
                 {
                     tracker.SetActive(false);
                     break;
                 }
             }
+        }
+
+        public bool IsReady()
+        {
+            return _done;
         }
         
 #if  UNITY_EDITOR

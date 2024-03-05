@@ -716,8 +716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729af4c709e976648887f37a8a36087b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  done: 0
-  trackers:
+  trackersLocal:
   - {fileID: 3891256112405076846}
   - {fileID: 3891256113249177637}
 --- !u!1 &3891256112217801888

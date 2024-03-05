@@ -11,7 +11,7 @@ namespace BCS.CORE.VR
     {
         public readonly BodyRole role;
         public readonly UnityEvent<bool> changeActive = new UnityEvent<bool>();
-        public string modelNumber;
+        public string modelName;
         private readonly GameObject _obj;
         
         public TrackerRoleState(GameObject obj, BodyRole role)

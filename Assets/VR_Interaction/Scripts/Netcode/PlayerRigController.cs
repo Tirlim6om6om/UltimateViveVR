@@ -15,7 +15,7 @@ namespace BCS.CORE.VR.Network
         [SerializeField] private List<PosesNet> poses;
         [SerializeField] private List<GameObject> visuals;
         [SerializeField] private TrackerRoleSetup trackerRoleSetup;
-        private readonly SyncList<BodyActive> _bodyActives = new SyncList<BodyActive>();
+        public SyncList<BodyActive> _bodyActives = new SyncList<BodyActive>();
 
         public override void OnStartAuthority()
         {
@@ -62,7 +62,7 @@ namespace BCS.CORE.VR.Network
                 pose.SetTarget();
                 if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
                 {
-                    _bodyActives.Add(new BodyActive((int)roleSet.bodyRole, true));   
+                    _bodyActives.Add(new BodyActive((int)roleSet.bodyRole, false));   
                 }
 
                 if (pose.posNet.TryGetComponent(out NetworkTransformBase transformBase))
@@ -78,12 +78,6 @@ namespace BCS.CORE.VR.Network
                     }
                 }
             }
-            StartCoroutine(WaitTrackers());
-        }
-
-        private IEnumerator WaitTrackers()
-        {
-            yield return new WaitUntil(() => trackerRoleSetup.done);
             foreach (var pose in poses)
             {
                 if (pose.posLocal.TryGetComponent(out IViveRoleComponent roleSetter))
@@ -104,10 +98,12 @@ namespace BCS.CORE.VR.Network
                 }
             }
         }
+        
 
         [Command(requiresAuthority = false)]
         public void SetActiveToObj(BodyRole role, bool active)
         {
+            DebugVR.Log("Command role: " + role);
             SetActiveToObjToClients(role, active);
         }
         

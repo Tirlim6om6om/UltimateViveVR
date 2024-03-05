@@ -1,5 +1,7 @@
-﻿using HTC.UnityPlugin.Vive;
+﻿using System.Collections;
+using HTC.UnityPlugin.Vive;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace BCS.CORE.VR
 {
@@ -8,16 +10,31 @@ namespace BCS.CORE.VR
     /// </summary>
     public abstract class TrackerRoleBase : MonoBehaviour
     {
+        public delegate void InitState();
+        public event InitState OnReady;
+
         /// <summary>
         /// Инициализация фреймворка трекеров
         /// </summary>
-        public abstract void Init();
+        public virtual void Init()
+        {
+            StartCoroutine(WaitReady());
+        }
+
+        private IEnumerator WaitReady()
+        {
+            while (!IsReady())
+            {
+                yield return null;
+            }
+            OnReady?.Invoke();
+        }
         
         /// <summary>
         /// Фреймворк готов к работе
         /// </summary>
         /// <returns></returns>
-        public abstract bool IsReady();
+        protected abstract bool IsReady();
         
         /// <summary>
         /// Получение роли трекеров по имени
@@ -25,6 +42,6 @@ namespace BCS.CORE.VR
         /// <param name="modelNumber">номер модели</param>
         /// <param name="role">роль на выход</param>
         /// <returns></returns>
-        public abstract bool GetTrackerRoleFromName(string modelNumber, out BodyRole role);
+        public abstract BodyRole GetTrackerRoleFromName(string modelNumber);
     }
 }

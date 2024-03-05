@@ -1,22 +1,21 @@
 ﻿#if VIU_OPENVR_SUPPORT
 using HTC.UnityPlugin.Vive;
+using HTC.UnityPlugin.VRModuleManagement;
 using Valve.VR;
 
 namespace BCS.CORE.VR
 {
     public class TrackerRoleSteam : TrackerRoleBase
     {
-        public override void Init()
+        protected override bool IsReady()
         {
-            //Инициализация STEAMVR - не требуется
+            return SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess;
         }
 
-        public override bool IsReady() =>  SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess;
-        
-        public override bool GetTrackerRoleFromName(string modelNumber, out BodyRole role)
+        public override BodyRole GetTrackerRoleFromName(string modelNumber)
         {
-            role = BodyRole.Invalid;
-            for (uint i = 0; i < 15; i++)
+            //15 - максимум девайсов в steamVR
+            for (uint i = 0; i < 16; i++)
             {
                 string uid = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i);
                 if (uid == modelNumber)
@@ -24,30 +23,23 @@ namespace BCS.CORE.VR
                     switch (uid)
                     {
                         case "vive_tracker_chest":
-                            role = BodyRole.Chest;
-                            break;
+                            return BodyRole.Chest;
                         case "vive_tracker_right_foot":
-                            role = BodyRole.RightFoot;
-                            break;
+                            return BodyRole.RightFoot;
                         case "vive_tracker_left_foot":
-                            role = BodyRole.LeftFoot;
-                            break;
+                            return BodyRole.LeftFoot;
                         case "vive_tracker_right_knee":
-                            role = BodyRole.RightKnee;
-                            break;
+                            return BodyRole.RightKnee;
                         case "vive_tracker_left_knee":
-                            role = BodyRole.LeftKnee;
-                            break;
+                            return BodyRole.LeftKnee;
                         case "vive_tracker_hip":
-                            role = BodyRole.Hip;
-                            break;
+                            return BodyRole.Hip;
                         default:
-                            return false;
+                            return BodyRole.Invalid;
                     }
-                    return true;
                 }
             }
-            return false;
+            return BodyRole.Invalid;
         }
     }
 }
