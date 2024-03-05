@@ -187,7 +187,7 @@ MonoBehaviour:
   - posLocal: {fileID: 1262887334379032318}
     posNet: {fileID: 5038058565588932433}
     playerRigController: {fileID: 0}
-  visuals:
+  visualsNetwork:
   - {fileID: 6951332858530086542}
   - {fileID: 6291708322137274862}
   - {fileID: 5499566841567193539}

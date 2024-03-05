@@ -10,7 +10,8 @@ namespace BCS.CORE.VR
     public class TrackerRoleState
     {
         public readonly BodyRole role;
-        public readonly UnityEvent<bool> changeActive = new UnityEvent<bool>();
+        public delegate void RoleActiveState(bool active);
+        public event RoleActiveState OnChangeActive;
         public string modelName;
         private readonly GameObject _obj;
         
@@ -23,7 +24,7 @@ namespace BCS.CORE.VR
         public void SetActive(bool active)
         {
             _obj.SetActive(active);
-            changeActive?.Invoke(active);
+            OnChangeActive?.Invoke(active);
         }
 
         public bool GetActive() => _obj.activeSelf;

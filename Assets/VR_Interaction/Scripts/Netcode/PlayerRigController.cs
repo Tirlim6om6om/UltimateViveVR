@@ -11,73 +11,85 @@ namespace BCS.CORE.VR.Network
     /// </summary>
     public class PlayerRigController : NetworkBehaviour
     {
+        [Tooltip("Локальный игрок")]
         [SerializeField] private GameObject playerLocal;
+        [Tooltip("Позиции нетворк и локальный частей тела")]
         [SerializeField] private List<PosesNet> poses;
-        [SerializeField] private List<GameObject> visuals;
+        [Tooltip("Визуальная часть нетворк игрока")]
+        [SerializeField] private List<GameObject> visualsNetwork;
+        [Tooltip("Компонент подключения трекеров1")]
         [SerializeField] private TrackerRoleSetup trackerRoleSetup;
-        public SyncList<BodyActive> _bodyActives = new SyncList<BodyActive>();
-
-        public override void OnStartAuthority()
-        {
-            if (isServer)
-            {
-                syncDirection = SyncDirection.ServerToClient;
-                syncMode = SyncMode.Observers;
-            }
-            else
-            {
-                syncDirection = SyncDirection.ClientToServer;
-            }
-        }
-
+        
+        private readonly SyncDictionary<BodyRole,bool> _bodyActives = new SyncDictionary<BodyRole,bool>();
+        
         public override void OnStartClient()
         {
             if (!isOwned)
             {
-                foreach (var pose in poses)
-                {
-                    if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
-                    {
-                        DebugVR.Log("Bodies: " + _bodyActives.Count);
+                GetActiveBodies();
+            }
+            else
+            {
+                SetVisualLocal();
+                InitPoses();
+                SetActiveBodies();
+            }
+        }
 
-                        int id = GetRole(roleSet.bodyRole);
-                        if (id < _bodyActives.Count)
-                        {
-                            pose.posNet.SetActive(_bodyActives[GetRole(roleSet.bodyRole)].active);
-                        }
+        #region Methods setup player
+         /// <summary>
+        /// Получение активностей частей тела
+        /// </summary>
+        private void GetActiveBodies()
+        {
+            foreach (var pose in poses)
+            {
+                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
+                {
+                    DebugVR.Log("Bodies: " + _bodyActives.Count);
+                    if (_bodyActives.ContainsKey(roleSet.bodyRole))
+                    {
+                        pose.posNet.SetActive(_bodyActives[roleSet.bodyRole]);
                     }
                 }
-                return;
             }
+        }
 
+        /// <summary>
+        /// Включение локального игрока и выключение нетворк визуальной части
+        /// </summary>
+        private void SetVisualLocal()
+        {
             playerLocal.SetActive(isLocalPlayer);
-            foreach (var visual in visuals)
+            foreach (var visual in visualsNetwork)
             {
                 Destroy(visual);
             }
-            visuals.Clear();
-            
+            visualsNetwork.Clear();
+        }
+
+        /// <summary>
+        /// Установка у нетворк частей тела их локальной части
+        /// Добавление особенных костей в список для их синхонизации
+        /// </summary>
+        private void InitPoses()
+        {
             foreach (var pose in poses)
             {
                 pose.SetTarget();
                 if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
                 {
-                    _bodyActives.Add(new BodyActive((int)roleSet.bodyRole, false));   
-                }
-
-                if (pose.posNet.TryGetComponent(out NetworkTransformBase transformBase))
-                {
-                    if (isServer)
-                    {
-                        transformBase.syncDirection = SyncDirection.ServerToClient;
-                        transformBase.syncMode = SyncMode.Observers;
-                    }
-                    else
-                    {
-                        transformBase.syncDirection = SyncDirection.ClientToServer;
-                    }
+                    _bodyActives.Add(roleSet.bodyRole, false);   
                 }
             }
+        }
+
+        /// <summary>
+        /// Синхронизация активностей нетворк частей тела
+        /// и их подписка на смену активностей
+        /// </summary>
+        private void SetActiveBodies()
+        {
             foreach (var pose in poses)
             {
                 if (pose.posLocal.TryGetComponent(out IViveRoleComponent roleSetter))
@@ -88,18 +100,23 @@ namespace BCS.CORE.VR.Network
                     {
                         if (tracker.role == role)
                         {
-                            DebugVR.Log(((BodyRole) roleSetter.viveRole.roleValue +
-                                         " : " + tracker.GetActive()));
+                            DebugVR.Log((BodyRole) roleSetter.viveRole.roleValue + " : " + tracker.GetActive());
                             SetActiveToObj(role, tracker.GetActive());
                             pose.playerRigController = this;
-                            tracker.changeActive.AddListener(pose.OnChangeActive);
+                            tracker.OnChangeActive += pose.OnChangeActive;
                         }
                     }
                 }
             }
         }
-        
+        #endregion
 
+        #region Network Methods
+        /// <summary>
+        /// Отправка команды включение/выключения
+        /// </summary>
+        /// <param name="role"></param>
+        /// <param name="active"></param>
         [Command(requiresAuthority = false)]
         public void SetActiveToObj(BodyRole role, bool active)
         {
@@ -107,6 +124,11 @@ namespace BCS.CORE.VR.Network
             SetActiveToObjToClients(role, active);
         }
         
+        /// <summary>
+        /// Включение части тела
+        /// </summary>
+        /// <param name="role"></param>
+        /// <param name="active"></param>
         [ClientRpc]
         private void SetActiveToObjToClients(BodyRole role, bool active)
         {
@@ -119,22 +141,11 @@ namespace BCS.CORE.VR.Network
                         DebugVR.Log("SetActive RPC: " + pose.posNet.name + " : " + active);
                         pose.posNet.SetActive(active);
                         if(isOwned)
-                            _bodyActives[GetRole(role)] = new BodyActive((int) role, active);
+                            _bodyActives[role] = active;
                     }
                 }
             }
         }
-
-        private int GetRole(BodyRole role)
-        {
-            for (int i = 0; i < _bodyActives.Count; i++)
-            {
-                if ((BodyRole) _bodyActives[i].role == role)
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
+        #endregion
     }
 }

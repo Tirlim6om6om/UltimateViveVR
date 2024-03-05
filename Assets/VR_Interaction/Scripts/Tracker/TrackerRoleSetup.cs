@@ -14,12 +14,12 @@ namespace BCS.CORE.VR
 
         public readonly List<TrackerRoleState> trackersRole = new List<TrackerRoleState>();
         
+        [Tooltip("Локальные трекеры частей тела (кроме рук)")]
         [SerializeField] private List<ViveRoleSetter> trackersLocal;
         
         private ViveRole.IMap _map;
         private readonly List<string> _modelNames = new List<string>();
         private TrackerRoleBase _trackerRoleBase;
-        private bool _done;
 
         private void Awake()
         {
@@ -46,7 +46,6 @@ namespace BCS.CORE.VR
                     OnDeviceConnected(deviceIndex, true);
                 }
             }
-            _done = true;
             VRModule.onDeviceConnected += OnDeviceConnected;
             _trackerRoleBase.OnReady -= Setup;
         }
@@ -56,20 +55,20 @@ namespace BCS.CORE.VR
             IVRModuleDeviceState device = VRModule.GetCurrentDeviceState(deviceIndex);
             if (connected)
             {
-                DebugVR.Log("Connected: " + device.modelNumber);
+                DebugVR.Log("Connect: " + device.modelNumber);
                 SetRole(device, _trackerRoleBase.GetTrackerRoleFromName(device.modelNumber));
             }
             else
             {
-                string modelNumber = GetModelOfLostTracker();
-
-                DebugVR.Log("Disconnect: " + modelNumber);
-
-                BodyRole role = GetBodyRoleByModel(modelNumber);
-                DeleteRole(modelNumber, role);
+                string modelName = GetModelOfLostTracker();
+                BodyRole role = GetBodyRoleByModel(modelName);
+                
+                DebugVR.Log("Disconnect: " + modelName);
+                DeleteRole(modelName, role);
             }
         }
 
+        #region Methods of searching
         private string GetModelOfLostTracker()
         {
             List<string> currentModelsName = new List<string>();
@@ -94,15 +93,20 @@ namespace BCS.CORE.VR
             foreach (var tracker in trackersRole)
             {
                 if (tracker.GetActive() && tracker.modelName == modelName)
+                {
                     return tracker.role;
+                }
             }
+            
             return BodyRole.Invalid;
         }
+        #endregion
 
+        #region Role control methods
         private void SetRole(IVRModuleDeviceState device, BodyRole role)
         {
             _map.BindDeviceToRoleValue(device.serialNumber, (int) role);
-            DebugVR.Log($"Device: {device.serialNumber} role: {role}\n");
+            DebugVR.Log($"Device: {device.serialNumber} role: {role}");
             _modelNames.Add(device.modelNumber);
             foreach (var tracker in trackersRole)
             {
@@ -128,18 +132,14 @@ namespace BCS.CORE.VR
                 }
             }
         }
+        #endregion
 
-        public bool IsReady()
-        {
-            return _done;
-        }
-        
 #if  UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                trackersRole[0].SetActive(true);
+                trackersRole[0].SetActive(!trackersRole[0].GetActive());
             }
         }
 #endif
