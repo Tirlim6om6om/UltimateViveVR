@@ -14,7 +14,6 @@ namespace BCS.CORE.VR
             gameObject.AddComponent<TrackerManager>().StartTracker();
         }
 
-
         public override bool IsReady()
         {
             return TrackerManager.Instance;
@@ -25,6 +24,7 @@ namespace BCS.CORE.VR
             string nameTracker = device.serialNumber.Split(' ')[1];
             uint i = (uint)( nameTracker[nameTracker.Length - 1] - '0');
             DebugVR.Log(device.serialNumber + " ID: " + i);
+
             TrackerRole trackerRole = TrackerManager.Instance.GetTrackerRole(TrackerUtils.s_TrackerIds[i]);
             switch (trackerRole)
             {

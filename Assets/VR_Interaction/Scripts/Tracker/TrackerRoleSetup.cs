@@ -10,7 +10,6 @@ namespace BCS.CORE.VR
     /// </summary>
     public class TrackerRoleSetup : MonoBehaviour
     {
-
         public readonly List<TrackerRoleState> trackersRole = new List<TrackerRoleState>();
         
         [Tooltip("Локальные трекеры частей тела (кроме рук)")]
@@ -170,10 +169,7 @@ namespace BCS.CORE.VR
         /// <param name="role"></param>
         private void DeleteRole(string serialName, BodyRole role)
         {
-            DebugVR.Log($"Unbind: {serialName} {role}");
-            DebugVR.Log($"serisl: {_serialNames.Contains(serialName)}");
             _serialNames.Remove(serialName);
-            DebugVR.Log($"Trackers: {trackersRole.Count}");
             foreach (var tracker in trackersRole)
             {
                 DebugVR.Log("/" + tracker.serial);
