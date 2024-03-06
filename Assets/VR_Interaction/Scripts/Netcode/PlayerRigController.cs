@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using HTC.UnityPlugin.Vive;
 using Mirror;
@@ -13,10 +12,13 @@ namespace BCS.CORE.VR.Network
     {
         [Tooltip("Локальный игрок")]
         [SerializeField] private GameObject playerLocal;
+
         [Tooltip("Позиции нетворк и локальный частей тела")]
         [SerializeField] private List<PosesNet> poses;
+
         [Tooltip("Визуальная часть нетворк игрока")]
         [SerializeField] private List<GameObject> visualsNetwork;
+
         [Tooltip("Компонент подключения трекеров")]
         [SerializeField] private TrackerRoleSetup trackerRoleSetup;
         
@@ -37,23 +39,6 @@ namespace BCS.CORE.VR.Network
         }
 
         #region Methods setup player
-         /// <summary>
-        /// Получение активностей частей тела
-        /// </summary>
-        private void GetActiveBodies()
-        {
-            foreach (var pose in poses)
-            {
-                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
-                {
-                    DebugVR.Log("Bodies: " + _bodyActives.Count);
-                    if (_bodyActives.ContainsKey(roleSet.bodyRole))
-                    {
-                        pose.posNet.SetActive(_bodyActives[roleSet.bodyRole]);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Включение локального игрока и выключение нетворк визуальной части
@@ -94,14 +79,12 @@ namespace BCS.CORE.VR.Network
             {
                 if (pose.posLocal.TryGetComponent(out IViveRoleComponent roleSetter))
                 {
-                    DebugVR.Log(((BodyRole) roleSetter.viveRole.roleValue).ToString());
                     BodyRole role = (BodyRole) roleSetter.viveRole.roleValue;
                     foreach (var tracker in trackerRoleSetup.trackersRole)
                     {
                         if (tracker.role == role)
                         {
-                            DebugVR.Log((BodyRole) roleSetter.viveRole.roleValue + " : " + tracker.GetActive());
-                            SetActiveToObj(role, tracker.GetActive());
+                            SetActiveToObj(role, tracker.IsActive());
                             pose.playerRigController = this;
                             tracker.OnChangeActive += pose.OnChangeActive;
                         }
@@ -109,9 +92,29 @@ namespace BCS.CORE.VR.Network
                 }
             }
         }
+
+        /// <summary>
+        /// Получение активностей частей тела
+        /// </summary>
+        private void GetActiveBodies()
+        {
+            foreach (var pose in poses)
+            {
+                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
+                {
+                    DebugVR.Log("Bodies: " + _bodyActives.Count);
+                    if (_bodyActives.ContainsKey(roleSet.bodyRole))
+                    {
+                        pose.posNet.SetActive(_bodyActives[roleSet.bodyRole]);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Network Methods
+
         /// <summary>
         /// Отправка команды включение/выключения
         /// </summary>
@@ -120,7 +123,6 @@ namespace BCS.CORE.VR.Network
         [Command(requiresAuthority = false)]
         public void SetActiveToObj(BodyRole role, bool active)
         {
-            DebugVR.Log("Command role: " + role);
             SetActiveToObjToClients(role, active);
         }
         
@@ -140,12 +142,15 @@ namespace BCS.CORE.VR.Network
                     {
                         DebugVR.Log("SetActive RPC: " + pose.posNet.name + " : " + active);
                         pose.posNet.SetActive(active);
-                        if(isOwned)
+                        if (isOwned)
+                        {
                             _bodyActives[role] = active;
+                        }
                     }
                 }
             }
         }
+
         #endregion
     }
 }

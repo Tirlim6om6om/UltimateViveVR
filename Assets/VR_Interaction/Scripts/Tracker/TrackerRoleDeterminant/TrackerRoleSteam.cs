@@ -1,5 +1,6 @@
 ﻿#if VIU_OPENVR_SUPPORT
 using HTC.UnityPlugin.Vive;
+using HTC.UnityPlugin.VRModuleManagement;
 using Valve.VR;
 
 namespace BCS.CORE.VR
@@ -11,7 +12,7 @@ namespace BCS.CORE.VR
             return SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess;
         }
 
-        public override BodyRole GetTrackerRoleFromName(string modelName)
+        public override BodyRole GetTrackerRoleFromName(IVRModuleDeviceState device)
         {
             string type;
             string modelNameSteam;
@@ -19,7 +20,7 @@ namespace BCS.CORE.VR
             for (uint i = 0; i < 16; ++i)
             {
                 modelNameSteam = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i);
-                if (modelNameSteam == modelName)
+                if (modelNameSteam == device.modelNumber)
                 {
                     type = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ControllerType_String, i);
                     switch (type)

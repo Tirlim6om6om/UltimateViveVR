@@ -12,9 +12,9 @@ namespace BCS.CORE.VR
         public readonly BodyRole role;
         public delegate void RoleActiveState(bool active);
         public event RoleActiveState OnChangeActive;
-        public string modelName;
+        public string serial;
 
-        private readonly GameObject _obj;
+        private GameObject _obj;
         
         public TrackerRoleState(GameObject obj, BodyRole role)
         {
@@ -24,10 +24,14 @@ namespace BCS.CORE.VR
 
         public void SetActive(bool active)
         {
+            DebugVR.Log($"{serial} = {active}");
             _obj.SetActive(active);
             OnChangeActive?.Invoke(active);
         }
 
-        public bool GetActive() => _obj.activeSelf;
+        public bool IsActive()
+        {
+            return _obj.activeSelf;
+        }
     }
 }

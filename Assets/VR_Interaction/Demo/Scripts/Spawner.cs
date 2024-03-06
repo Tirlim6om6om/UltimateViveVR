@@ -7,8 +7,6 @@ public class Spawner : NetworkBehaviour
     [SerializeField] private GameObject ball;
     private bool _spawned;
     
-    
-    
     [Command]
     public void Spawn(Vector3 pos)
     {
@@ -19,12 +17,14 @@ public class Spawner : NetworkBehaviour
     private void Update()
     {
         var deviceState = VRModule.GetDeviceState(VRModule.GetRightControllerDeviceIndex());
+
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             Spawn(transform.position);
         }
 #endif
+
         if (deviceState.GetButtonPress(VRModuleRawButton.A))
         {
             if (!_spawned)

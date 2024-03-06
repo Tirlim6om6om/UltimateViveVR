@@ -26,8 +26,10 @@ namespace BCS.CORE.VR
         public static void Log(string message)
         {
             Debug.Log("DebugVR: " + message);
-            if(_instance && _instance.textLog)
+            if (_instance && _instance.textLog)
+            {
                 _instance.textLog.text = message + '\n' + _instance.textLog.text;
+            }
         }
     }
 }

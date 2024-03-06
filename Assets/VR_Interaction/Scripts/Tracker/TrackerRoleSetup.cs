@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using HTC.UnityPlugin.Vive;
 using HTC.UnityPlugin.VRModuleManagement;
@@ -18,12 +17,16 @@ namespace BCS.CORE.VR
         [SerializeField] private List<ViveRoleSetter> trackersLocal;
         
         private ViveRole.IMap _map;
-        private readonly List<string> _modelNames = new List<string>();
+        private readonly List<string> _serialNames = new List<string>();
         private TrackerRoleBase _trackerRoleBase;
 
         private void OnEnable()
         {
+            //инициализация компонентов
             _trackerRoleBase = TrackerRoleDeterminant.GetTrackerRoleFramework(gameObject);
+            _map = ViveRole.GetMap<BodyRole>();
+
+            //создание списка трекеров
             foreach (var tracker in trackersLocal)
             {
                 TrackerRoleState trackerRoleState 
@@ -31,7 +34,8 @@ namespace BCS.CORE.VR
                 trackerRoleState.SetActive(false);
                 trackersRole.Add(trackerRoleState);
             }
-            _map = ViveRole.GetMap<BodyRole>();
+
+            //старт инициализации фреймворка трекеров и трекеров
             _trackerRoleBase.Init();
             _trackerRoleBase.OnReady += Setup;
             if (_trackerRoleBase.IsReady())
@@ -40,6 +44,11 @@ namespace BCS.CORE.VR
             }
         }
 
+        #region Invoke methods
+
+        /// <summary>
+        /// Подписка к подключению трекеров и включение уже имеющихся
+        /// </summary>
         private void Setup()
         {
             DebugVR.Log("START SETUP TRACKERS");
@@ -54,49 +63,73 @@ namespace BCS.CORE.VR
             _trackerRoleBase.OnReady -= Setup;
         }
 
+        /// <summary>
+        /// Обработка присоединения или отключения трекера
+        /// </summary>
+        /// <param name="deviceIndex"></param>
+        /// <param name="connected"></param>
         private void OnDeviceConnected(uint deviceIndex, bool connected)
         {
             IVRModuleDeviceState device = VRModule.GetCurrentDeviceState(deviceIndex);
+
             if (connected)
             {
-                DebugVR.Log("Connect: " + device.modelNumber);
-                SetRole(device, _trackerRoleBase.GetTrackerRoleFromName(device.modelNumber));
+                if (device.deviceClass == VRModuleDeviceClass.GenericTracker)
+                {
+                    DebugVR.Log("Connect: " + device.serialNumber);
+                    SetRole(device, _trackerRoleBase.GetTrackerRoleFromName(device));
+                }
             }
             else
             {
-                string modelName = GetModelOfLostTracker();
-                BodyRole role = GetBodyRoleByModel(modelName);
-                
-                DebugVR.Log("Disconnect: " + modelName);
-                DeleteRole(modelName, role);
+                string serial = GetSerialOfLostTracker();
+                BodyRole role = GetBodyRoleBySerial(serial);
+
+                DebugVR.Log("Disconnect: " + serial);
+                DeleteRole(serial, role);
             }
         }
 
+        #endregion
+
         #region Methods of searching
-        private string GetModelOfLostTracker()
+
+        /// <summary>
+        /// Поиск потерянного трекера, 
+        /// который есть в списке существующих трекеров, но нет в сохраненных
+        /// </summary>
+        /// <returns>модель трекера</returns>
+        private string GetSerialOfLostTracker()
         {
-            List<string> currentModelsName = new List<string>();
+            List<string> currentSerialsName = new List<string>();
             for (uint deviceIndex = 0; deviceIndex < VRModule.GetDeviceStateCount(); ++deviceIndex)
             {
-                currentModelsName.Add(VRModule.GetCurrentDeviceState(deviceIndex).modelNumber);
+                currentSerialsName.Add(VRModule.GetCurrentDeviceState(deviceIndex).serialNumber);
             }
             
-            foreach (var modelName in _modelNames)
+            foreach (var serial in _serialNames)
             {
-                if (currentModelsName.Contains(modelName))
+                if (!currentSerialsName.Contains(serial))
                 {
-                    return modelName;
+                    DebugVR.Log("Lost: " + serial);
+                    return serial;
                 }
             }
-            
+
+            DebugVR.Log("Lost: Не найден");
             return "";
         }
 
-        private BodyRole GetBodyRoleByModel(string modelName)
+        /// <summary>
+        /// Получение роли по названию трекера
+        /// </summary>
+        /// <param name="serialName"></param>
+        /// <returns>роль</returns>
+        private BodyRole GetBodyRoleBySerial(string serialName)
         {
             foreach (var tracker in trackersRole)
             {
-                if (tracker.GetActive() && tracker.modelName == modelName)
+                if (tracker.IsActive() && tracker.serial == serialName)
                 {
                     return tracker.role;
                 }
@@ -104,32 +137,47 @@ namespace BCS.CORE.VR
             
             return BodyRole.Invalid;
         }
+
         #endregion
 
         #region Role control methods
+        
+        /// <summary>
+        /// Установка роли трекеру
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="role"></param>
         private void SetRole(IVRModuleDeviceState device, BodyRole role)
         {
             _map.BindDeviceToRoleValue(device.serialNumber, (int) role);
-            DebugVR.Log($"Device: m: {device.modelNumber} s: {device.serialNumber} role: {role}");
-            _modelNames.Add(device.modelNumber);
+            DebugVR.Log($"Device s: {device.serialNumber} role: {role}");
+            _serialNames.Add(device.serialNumber);
             foreach (var tracker in trackersRole)
             {
                 if (tracker.role == role)
                 {
+                    tracker.serial = device.serialNumber;
                     tracker.SetActive(true);
-                    tracker.modelName = device.modelNumber;
                     break;
                 }
             }
         }
 
-        private void DeleteRole(string modelName, BodyRole role)
+        /// <summary>
+        /// Удаление роли трекера
+        /// </summary>
+        /// <param name="serialName"></param>
+        /// <param name="role"></param>
+        private void DeleteRole(string serialName, BodyRole role)
         {
-            _map.UnbindRoleValue((int)role);
-            _modelNames.Remove(modelName);
+            DebugVR.Log($"Unbind: {serialName} {role}");
+            DebugVR.Log($"serisl: {_serialNames.Contains(serialName)}");
+            _serialNames.Remove(serialName);
+            DebugVR.Log($"Trackers: {trackersRole.Count}");
             foreach (var tracker in trackersRole)
             {
-                if (tracker.modelName == modelName)
+                DebugVR.Log("/" + tracker.serial);
+                if (tracker.serial == serialName)
                 {
                     tracker.SetActive(false);
                     break;
@@ -138,14 +186,16 @@ namespace BCS.CORE.VR
         }
         #endregion
 
-#if  UNITY_EDITOR
+        #region Unity editor testing
+#if UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                trackersRole[0].SetActive(!trackersRole[0].GetActive());
+                trackersRole[0].SetActive(!trackersRole[0].IsActive());
             }
         }
 #endif
+        #endregion
     }
 }

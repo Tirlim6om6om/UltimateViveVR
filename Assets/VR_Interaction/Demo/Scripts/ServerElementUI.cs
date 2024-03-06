@@ -14,6 +14,11 @@ namespace BCS.CORE.VR.Network.Example
             _info = server;
             textIp.text = _info.uri.AbsoluteUri;
         }
+
+        public ServerResponse GetIP()
+        {
+            return _info;
+        }
         
         public void Connect()
         {

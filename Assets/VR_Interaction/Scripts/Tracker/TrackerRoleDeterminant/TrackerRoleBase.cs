@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using HTC.UnityPlugin.Vive;
+using HTC.UnityPlugin.VRModuleManagement;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -42,6 +43,6 @@ namespace BCS.CORE.VR
         /// <param name="modelNumber">номер модели</param>
         /// <param name="role">роль на выход</param>
         /// <returns></returns>
-        public abstract BodyRole GetTrackerRoleFromName(string modelNumber);
+        public abstract BodyRole GetTrackerRoleFromName(IVRModuleDeviceState device);
     }
 }
