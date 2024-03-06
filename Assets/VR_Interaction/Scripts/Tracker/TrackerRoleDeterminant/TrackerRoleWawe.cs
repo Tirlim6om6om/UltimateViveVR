@@ -13,7 +13,7 @@ namespace BCS.CORE.VR
             gameObject.AddComponent<TrackerManager>().InitialStartTracker = true;
         }
 
-        protected override bool IsReady()
+        public override bool IsReady()
         {
             return TrackerManager.Instance;
         }
@@ -21,7 +21,7 @@ namespace BCS.CORE.VR
         public override BodyRole GetTrackerRoleFromName(string modelNumber)
         {
             modelNumber = modelNumber.Split(' ')[0];
-            for (int i = 0; i < TrackerUtils.s_TrackerIds.Length; i++)
+            for (int i = 0; i < TrackerUtils.s_TrackerIds.Length; ++i)
             {
                 TrackerManager.Instance.GetTrackerDeviceName(TrackerUtils.s_TrackerIds[i], out string nameDevice);
                 if (nameDevice == modelNumber)

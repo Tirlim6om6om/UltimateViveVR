@@ -17,7 +17,7 @@ namespace BCS.CORE.VR.Network
         [SerializeField] private List<PosesNet> poses;
         [Tooltip("Визуальная часть нетворк игрока")]
         [SerializeField] private List<GameObject> visualsNetwork;
-        [Tooltip("Компонент подключения трекеров1")]
+        [Tooltip("Компонент подключения трекеров")]
         [SerializeField] private TrackerRoleSetup trackerRoleSetup;
         
         private readonly SyncDictionary<BodyRole,bool> _bodyActives = new SyncDictionary<BodyRole,bool>();

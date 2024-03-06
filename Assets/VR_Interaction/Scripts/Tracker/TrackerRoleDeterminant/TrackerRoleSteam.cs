@@ -1,26 +1,28 @@
 ﻿#if VIU_OPENVR_SUPPORT
 using HTC.UnityPlugin.Vive;
-using HTC.UnityPlugin.VRModuleManagement;
 using Valve.VR;
 
 namespace BCS.CORE.VR
 {
     public class TrackerRoleSteam : TrackerRoleBase
     {
-        protected override bool IsReady()
+        public override bool IsReady()
         {
             return SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess;
         }
 
-        public override BodyRole GetTrackerRoleFromName(string modelNumber)
+        public override BodyRole GetTrackerRoleFromName(string modelName)
         {
+            string type;
+            string modelNameSteam;
             //15 - максимум девайсов в steamVR
-            for (uint i = 0; i < 16; i++)
+            for (uint i = 0; i < 16; ++i)
             {
-                string uid = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i);
-                if (uid == modelNumber)
+                modelNameSteam = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i);
+                if (modelNameSteam == modelName)
                 {
-                    switch (uid)
+                    type = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ControllerType_String, i);
+                    switch (type)
                     {
                         case "vive_tracker_chest":
                             return BodyRole.Chest;

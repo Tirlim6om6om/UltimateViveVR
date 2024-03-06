@@ -79,7 +79,7 @@ MonoBehaviour:
   m_enableExternalCameraSwitch: 1
   m_externalCameraSwitchKey: 109
   m_externalCameraSwitchKeyModifier: 303
-  m_activateOculusVRModule: 0
+  m_activateOculusVRModule: 1
   m_oculusVRAndroidManifestPath: 
   m_enableOculusSDKHandRenderModel: 1
   m_enableOculusSDKControllerRenderModel: 1
@@ -97,12 +97,12 @@ MonoBehaviour:
   m_simulatorKeyRotateSpeed: 90
   m_simulatorLeftControllerModel: 2
   m_simulatorRightControllerModel: 2
-  m_simulatorOtherModel: 48
+  m_simulatorOtherModel: 3
   m_activateUnityNativeVRModule: 1
   m_activateUnityXRModule: 1
   m_preferUnityXRPointerPose: 0
   m_activateWaveVRModule: 1
-  m_simulateWaveVR6DoFController: 1
+  m_simulateWaveVR6DoFController: 0
   m_waveVRAddVirtualArmTo3DoFController: 1
   m_waveVRVirtualNeckPosition: {x: 0, y: -0.15, z: 0}
   m_waveVRVirtualElbowRestPosition: {x: 0.195, y: -0.5, z: 0.005}

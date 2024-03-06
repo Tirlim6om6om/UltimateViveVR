@@ -18,3 +18,4 @@ EditorBuildSettings:
     Unity.XR.OpenVR.Settings: {fileID: 11400000, guid: 58192d25814cc9546a75855289161b46, type: 2}
     com.htc.upm.wave.xrsdk.xrsettings: {fileID: 11400000, guid: b00adf4b11b397841917cde58b8c59a2, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 699d56af24553a946b5684c58e57a4a7, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 735f06f4752ffce4382d6a546336d93a, type: 2}

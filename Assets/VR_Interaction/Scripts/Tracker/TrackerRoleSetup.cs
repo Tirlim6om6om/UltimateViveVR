@@ -21,7 +21,7 @@ namespace BCS.CORE.VR
         private readonly List<string> _modelNames = new List<string>();
         private TrackerRoleBase _trackerRoleBase;
 
-        private void Awake()
+        private void OnEnable()
         {
             _trackerRoleBase = TrackerRoleDeterminant.GetTrackerRoleFramework(gameObject);
             foreach (var tracker in trackersLocal)
@@ -34,6 +34,10 @@ namespace BCS.CORE.VR
             _map = ViveRole.GetMap<BodyRole>();
             _trackerRoleBase.Init();
             _trackerRoleBase.OnReady += Setup;
+            if (_trackerRoleBase.IsReady())
+            {
+                Setup();
+            }
         }
 
         private void Setup()
@@ -106,7 +110,7 @@ namespace BCS.CORE.VR
         private void SetRole(IVRModuleDeviceState device, BodyRole role)
         {
             _map.BindDeviceToRoleValue(device.serialNumber, (int) role);
-            DebugVR.Log($"Device: {device.serialNumber} role: {role}");
+            DebugVR.Log($"Device: m: {device.modelNumber} s: {device.serialNumber} role: {role}");
             _modelNames.Add(device.modelNumber);
             foreach (var tracker in trackersRole)
             {

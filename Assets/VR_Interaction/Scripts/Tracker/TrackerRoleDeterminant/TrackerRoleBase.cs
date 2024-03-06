@@ -34,7 +34,7 @@ namespace BCS.CORE.VR
         /// Фреймворк готов к работе
         /// </summary>
         /// <returns></returns>
-        protected abstract bool IsReady();
+        public abstract bool IsReady();
         
         /// <summary>
         /// Получение роли трекеров по имени

@@ -13,6 +13,7 @@ namespace BCS.CORE.VR
         public delegate void RoleActiveState(bool active);
         public event RoleActiveState OnChangeActive;
         public string modelName;
+
         private readonly GameObject _obj;
         
         public TrackerRoleState(GameObject obj, BodyRole role)
