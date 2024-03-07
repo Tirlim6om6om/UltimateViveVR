@@ -12,7 +12,8 @@ namespace BCS.CORE.VR.Network
     {
         public Transform posLocal;
         public GameObject posNet;
-        [HideInInspector] public PlayerRigController playerRigController;
+        
+        [HideInInspector] public PlayerRigNetwork playerRig;
 
         public void SetTarget()
         {
@@ -22,7 +23,7 @@ namespace BCS.CORE.VR.Network
         public void OnChangeActive(bool active){
             if (posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
             {
-                playerRigController.SetActiveToObj(roleSet.bodyRole, active);
+                playerRig.SetActiveToObj(roleSet.bodyRole, active);
             }
         }
     }

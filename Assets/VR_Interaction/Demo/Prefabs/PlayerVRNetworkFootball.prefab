@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 284118447059546279}
   - component: {fileID: 4213246375321265585}
   m_Layer: 0
-  m_Name: PlayerVROnline
+  m_Name: PlayerVRNetworkFootball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -169,24 +169,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncDirection: 1
   syncMode: 0
-  syncInterval: 0.5
+  syncInterval: 1
   playerLocal: {fileID: 1262887333347677627}
   poses:
   - posLocal: {fileID: 1262887333347448563}
     posNet: {fileID: 2559251841834550945}
-    playerRigController: {fileID: 0}
+    playerRig: {fileID: 0}
   - posLocal: {fileID: 1262887333347383253}
     posNet: {fileID: 8265583839302721940}
-    playerRigController: {fileID: 0}
+    playerRig: {fileID: 0}
   - posLocal: {fileID: 1262887333347420589}
     posNet: {fileID: 1221851327265884545}
-    playerRigController: {fileID: 0}
+    playerRig: {fileID: 0}
   - posLocal: {fileID: 1262887333904025009}
     posNet: {fileID: 6878505348389756346}
-    playerRigController: {fileID: 0}
+    playerRig: {fileID: 0}
   - posLocal: {fileID: 1262887334379032318}
     posNet: {fileID: 5038058565588932433}
-    playerRigController: {fileID: 0}
+    playerRig: {fileID: 0}
   visualsNetwork:
   - {fileID: 6951332858530086542}
   - {fileID: 6291708322137274862}

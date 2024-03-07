@@ -7,6 +7,8 @@ namespace BCS.CORE.VR
 {
     public class TrackerRoleSteam : TrackerRoleBase
     {
+        private const uint countDevices = 16;
+
         public override bool IsReady()
         {
             return SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess;
@@ -17,7 +19,7 @@ namespace BCS.CORE.VR
             string type;
             string modelNameSteam;
             //15 - максимум девайсов в steamVR
-            for (uint i = 0; i < 16; ++i)
+            for (uint i = 0; i < countDevices; ++i)
             {
                 modelNameSteam = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i);
                 if (modelNameSteam == device.modelNumber)

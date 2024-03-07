@@ -11,8 +11,8 @@ namespace BCS.CORE.VR
     /// </summary>
     public abstract class TrackerRoleBase : MonoBehaviour
     {
-        public delegate void InitState();
-        public event InitState OnReady;
+        public delegate void InitStateEvents();
+        public event InitStateEvents OnReady;
 
         /// <summary>
         /// Инициализация фреймворка трекеров
@@ -22,6 +22,10 @@ namespace BCS.CORE.VR
             StartCoroutine(WaitReady());
         }
 
+        /// <summary>
+        /// Ожидание готовности и вызов метода по окончанию
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator WaitReady()
         {
             while (!IsReady())

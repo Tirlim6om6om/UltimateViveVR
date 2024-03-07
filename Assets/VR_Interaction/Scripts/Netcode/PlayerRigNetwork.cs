@@ -6,9 +6,9 @@ using UnityEngine;
 namespace BCS.CORE.VR.Network
 {
     /// <summary>
-    /// Синхронизация нетворк и локального игрока
+    /// Настройка нетворк трекеров к ригу
     /// </summary>
-    public class PlayerRigController : NetworkBehaviour
+    public class PlayerRigNetwork : NetworkBehaviour
     {
         [Tooltip("Локальный игрок")]
         [SerializeField] private GameObject playerLocal;
@@ -85,7 +85,7 @@ namespace BCS.CORE.VR.Network
                         if (tracker.role == role)
                         {
                             SetActiveToObj(role, tracker.IsActive());
-                            pose.playerRigController = this;
+                            pose.playerRig = this;
                             tracker.OnChangeActive += pose.OnChangeActive;
                         }
                     }
@@ -100,13 +100,10 @@ namespace BCS.CORE.VR.Network
         {
             foreach (var pose in poses)
             {
-                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
+                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet) 
+                    && _bodyActives.ContainsKey(roleSet.bodyRole))
                 {
-                    DebugVR.Log("Bodies: " + _bodyActives.Count);
-                    if (_bodyActives.ContainsKey(roleSet.bodyRole))
-                    {
-                        pose.posNet.SetActive(_bodyActives[roleSet.bodyRole]);
-                    }
+                    pose.posNet.SetActive(_bodyActives[roleSet.bodyRole]);
                 }
             }
         }
@@ -136,16 +133,14 @@ namespace BCS.CORE.VR.Network
         {
             foreach (var pose in poses)
             {
-                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSetter))
+                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSetter) 
+                    && roleSetter.bodyRole == role)
                 {
-                    if (roleSetter.bodyRole == role)
+                    DebugVR.Log("SetActive RPC: " + pose.posNet.name + " : " + active);
+                    pose.posNet.SetActive(active);
+                    if (isOwned)
                     {
-                        DebugVR.Log("SetActive RPC: " + pose.posNet.name + " : " + active);
-                        pose.posNet.SetActive(active);
-                        if (isOwned)
-                        {
-                            _bodyActives[role] = active;
-                        }
+                        _bodyActives[role] = active;
                     }
                 }
             }

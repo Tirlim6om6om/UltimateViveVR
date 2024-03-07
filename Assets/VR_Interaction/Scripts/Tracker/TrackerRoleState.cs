@@ -10,11 +10,12 @@ namespace BCS.CORE.VR
     public class TrackerRoleState
     {
         public readonly BodyRole role;
-        public delegate void RoleActiveState(bool active);
-        public event RoleActiveState OnChangeActive;
         public string serial;
 
-        private GameObject _obj;
+        public delegate void RoleActiveState(bool active);
+        public event RoleActiveState OnChangeActive;
+        
+        private readonly GameObject _obj;
         
         public TrackerRoleState(GameObject obj, BodyRole role)
         {

@@ -34,13 +34,9 @@ namespace BCS.CORE.VR
                 trackersRole.Add(trackerRoleState);
             }
 
-            //старт инициализации фреймворка трекеров и трекеров
-            _trackerRoleBase.Init();
+            //старт инициализации фреймворка vr и трекеров
             _trackerRoleBase.OnReady += Setup;
-            if (_trackerRoleBase.IsReady())
-            {
-                Setup();
-            }
+            _trackerRoleBase.Init();
         }
 
         #region Invoke methods
@@ -91,7 +87,7 @@ namespace BCS.CORE.VR
 
         #endregion
 
-        #region Methods of searching
+        #region Getters
 
         /// <summary>
         /// Поиск потерянного трекера, 
@@ -116,7 +112,7 @@ namespace BCS.CORE.VR
             }
 
             DebugVR.Log("Lost: Не найден");
-            return "";
+            return null;
         }
 
         /// <summary>
@@ -151,6 +147,7 @@ namespace BCS.CORE.VR
             _map.BindDeviceToRoleValue(device.serialNumber, (int) role);
             DebugVR.Log($"Device s: {device.serialNumber} role: {role}");
             _serialNames.Add(device.serialNumber);
+
             foreach (var tracker in trackersRole)
             {
                 if (tracker.role == role)
@@ -172,7 +169,6 @@ namespace BCS.CORE.VR
             _serialNames.Remove(serialName);
             foreach (var tracker in trackersRole)
             {
-                DebugVR.Log("/" + tracker.serial);
                 if (tracker.serial == serialName)
                 {
                     tracker.SetActive(false);
