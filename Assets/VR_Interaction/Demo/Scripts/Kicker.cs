@@ -28,10 +28,15 @@ namespace BCS.CORE.VR.Network.Example
             }
         }
 
-        [Command]
+        [Command (requiresAuthority = false)]
         public void Kick(GameObject other, float powerInput, Vector3 pos)
         {
-            DebugVR.Log("Kick -> " + powerInput + " from " + pos);
+            KickClients(other, powerInput, pos);
+        }
+
+        [ClientRpc]
+        private void KickClients(GameObject other, float powerInput, Vector3 pos)
+        {
             if (powerInput > 0)
             {
                 other.transform.GetComponent<Rigidbody>()

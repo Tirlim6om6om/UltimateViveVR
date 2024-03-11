@@ -38,6 +38,10 @@ namespace BCS.CORE.VR
                     return BodyRole.RightKnee;
                 case TrackerRole.Knee_Left:
                     return BodyRole.LeftKnee;
+                case TrackerRole.Hand_Right:
+                    return BodyRole.RightHand;
+                case TrackerRole.Hand_Left:
+                    return BodyRole.LeftHand;
                 default:
                     return BodyRole.Invalid;
             }

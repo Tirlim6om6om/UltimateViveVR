@@ -1,4 +1,5 @@
 ﻿using System;
+using HTC.UnityPlugin.Vive;
 using Mirror;
 using UnityEngine;
 
@@ -12,7 +13,8 @@ namespace BCS.CORE.VR.Network
     {
         public Transform posLocal;
         public GameObject posNet;
-        
+        public BodyRole bodyRole = BodyRole.Invalid;
+
         [HideInInspector] public PlayerRigNetwork playerRig;
 
         public void SetTarget()
@@ -21,10 +23,7 @@ namespace BCS.CORE.VR.Network
         }
         
         public void OnChangeActive(bool active){
-            if (posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
-            {
-                playerRig.SetActiveToObj(roleSet.bodyRole, active);
-            }
+            playerRig.SetActiveToObj(bodyRole, active);
         }
     }
 }

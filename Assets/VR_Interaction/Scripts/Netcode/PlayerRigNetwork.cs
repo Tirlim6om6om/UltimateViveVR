@@ -62,9 +62,9 @@ namespace BCS.CORE.VR.Network
             foreach (var pose in poses)
             {
                 pose.SetTarget();
-                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet))
+                if (pose.bodyRole != BodyRole.Invalid)
                 {
-                    _bodyActives.Add(roleSet.bodyRole, false);   
+                    _bodyActives.Add(pose.bodyRole, false);   
                 }
             }
         }
@@ -100,10 +100,9 @@ namespace BCS.CORE.VR.Network
         {
             foreach (var pose in poses)
             {
-                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSet) 
-                    && _bodyActives.ContainsKey(roleSet.bodyRole))
+                if (pose.bodyRole != BodyRole.Invalid && _bodyActives.ContainsKey(pose.bodyRole))
                 {
-                    pose.posNet.SetActive(_bodyActives[roleSet.bodyRole]);
+                    pose.posNet.SetActive(_bodyActives[pose.bodyRole]);
                 }
             }
         }
@@ -133,8 +132,7 @@ namespace BCS.CORE.VR.Network
         {
             foreach (var pose in poses)
             {
-                if (pose.posNet.TryGetComponent(out RoleTrackerNetwork roleSetter) 
-                    && roleSetter.bodyRole == role)
+                if (pose.bodyRole != BodyRole.Invalid && pose.bodyRole == role)
                 {
                     DebugVR.Log("SetActive RPC: " + pose.posNet.name + " : " + active);
                     pose.posNet.SetActive(active);
