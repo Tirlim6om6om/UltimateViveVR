@@ -1,12 +1,15 @@
 using BCS.CORE.VR;
 using HTC.UnityPlugin.VRModuleManagement;
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartCalibr : MonoBehaviour
+public class StartCalibr : NetworkBehaviour
 {
     [SerializeField] private Calibrator calibrator;
+    [SerializeField] private Calibrator calibratorNetwork;
+    [SerializeField] private GameObject model;
     private bool _calibrated;
 
     private void Update()
@@ -16,7 +19,7 @@ public class StartCalibr : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            calibrator.Calibrate();
+            CallCalibrate();
         }
 #endif
 
@@ -24,8 +27,7 @@ public class StartCalibr : MonoBehaviour
         {
             if (!_calibrated)
             {
-                DebugVR.Log("Calibrate");
-                calibrator.Calibrate();
+                CallCalibrate();
                 _calibrated = true;
             }
         }
@@ -33,5 +35,26 @@ public class StartCalibr : MonoBehaviour
         {
             _calibrated = false;
         }
+    }
+
+    private void CallCalibrate()
+    {
+        DebugVR.Log("Calibrate");
+        model.SetActive(true);
+        calibrator.Calibrate();
+        CalibrCommand();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CalibrCommand()
+    {
+        CalibrClient();
+    }
+
+    [ClientRpc]
+    private void CalibrClient()
+    {
+        if(!isOwned)
+            calibratorNetwork.Calibrate();
     }
 }

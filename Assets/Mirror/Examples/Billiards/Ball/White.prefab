@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clientStarted: 0
   sceneId: 0
   _assetId: 554815358
   serverOnly: 0
@@ -284,6 +285,7 @@ MonoBehaviour:
   dragIndicator: {fileID: 982362982}
   rigidBody: {fileID: 1848203816128897140}
   forceMultiplier: 2
+  maxForce: 40
 --- !u!114 &-2991986576794647411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +302,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   target: {fileID: 3429911415116987812}
-  clientAuthority: 0
   syncPosition: 1
   syncRotation: 1
   syncScale: 0
@@ -314,6 +315,7 @@ MonoBehaviour:
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChange: 0
+  compressRotation: 1
   bufferResetMultiplier: 3
   positionSensitivity: 0.01
   rotationSensitivity: 0.01

@@ -9,14 +9,17 @@ EditorBuildSettings:
     path: Assets/VR_Interaction/HTC.UnityPlugin/ViveInputUtility/Examples/7.RoleBindingExample/RoleBindingExample.unity
     guid: bc4e44a3b6c99684384abd378f45e9fe
   - enabled: 0
-    path: Assets/VR_Interaction/Demo/Scenes/SampleScene.unity
+    path: Assets/New Folder/volta/Scenes/HangarVolta.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/VR_Interaction/Demo/Scenes/Network/FootballDemo.unity
     guid: edbda35768abacc4e918f5c74bf65bc4
-  - enabled: 1
+  - enabled: 0
     path: Assets/VR_Interaction/Demo/Scenes/IK/IKDemo.unity
     guid: 1d1964d8cf744e541a78fd22bdced3d2
+  - enabled: 1
+    path: Assets/VR_Interaction/Demo/Scenes/Volta_Football.unity
+    guid: 0e9cc2499ef42d14d96b09ea3c6e2bde
   m_configObjects:
     Unity.XR.OpenVR.Settings: {fileID: 11400000, guid: 58192d25814cc9546a75855289161b46, type: 2}
     com.htc.upm.wave.xrsdk.xrsettings: {fileID: 11400000, guid: b00adf4b11b397841917cde58b8c59a2, type: 2}

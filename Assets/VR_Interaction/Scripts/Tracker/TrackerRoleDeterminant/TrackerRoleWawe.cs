@@ -42,6 +42,8 @@ namespace BCS.CORE.VR
                     return BodyRole.RightHand;
                 case TrackerRole.Hand_Left:
                     return BodyRole.LeftHand;
+                case TrackerRole.Waist:
+                    return BodyRole.Hip;
                 default:
                     return BodyRole.Invalid;
             }
