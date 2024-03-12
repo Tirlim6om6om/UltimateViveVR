@@ -51,7 +51,7 @@ MonoBehaviour:
   FSE_Level: 0.5
   supportedFPS: 0
   waveXRFolder: Assets/Wave/XR
-  waveEssenceFolder: Assets/Wave/Essence
+  waveEssenceFolder: Assets/VR_Interaction/Wave/Essence
   displayGamutPreferences: 000000000100000002000000
   enableAutoFallbackForMultiLayer: 1
   allowSpectatorCamera: 0
@@ -65,4 +65,4 @@ MonoBehaviour:
   EnableBodyTracking: 1
   EnableScenePerception: 0
   EnableSceneMesh: 0
-  EnableMarker: 0
+  EnableMarker: 1

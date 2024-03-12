@@ -22,9 +22,11 @@ namespace BCS.CORE.VR
             for (uint i = 0; i < countDevices; ++i)
             {
                 modelNameSteam = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ModelNumber_String, i);
+                
                 if (modelNameSteam == device.modelNumber)
                 {
                     type = SteamVR.instance.GetStringProperty(ETrackedDeviceProperty.Prop_ControllerType_String, i);
+                    DebugVR.Log(type);
                     switch (type)
                     {
                         case "vive_tracker_chest":
@@ -37,7 +39,7 @@ namespace BCS.CORE.VR
                             return BodyRole.RightKnee;
                         case "vive_tracker_left_knee":
                             return BodyRole.LeftKnee;
-                        case "vive_tracker_hip":
+                        case "vive_tracker_waist":
                             return BodyRole.Hip;
                         default:
                             return BodyRole.Invalid;
