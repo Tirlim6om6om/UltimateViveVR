@@ -84,7 +84,7 @@ MonoBehaviour:
   serverOnly: 0
   visible: 2
   hasSpawned: 0
---- !u!114 &6289666971272092280
+--- !u!114 &8107213592459458787
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,33 +93,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 1816980423634766720}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b20dc110904e47f8a154cdcf6433eae, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ee521453741c2241af2990fd0c938f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  target: {fileID: 3468069067717741114}
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  coordinateSpace: 0
-  sendIntervalMultiplier: 1
-  timelineOffset: 0
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChange: 1
-  compressRotation: 1
-  bufferResetMultiplier: 3
-  positionSensitivity: 0.01
-  rotationSensitivity: 0.01
-  scaleSensitivity: 0.01
---- !u!4 &3468069067717741114 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 445286875452012912, guid: 57042bd2b401821449f1e0e4919d84bb, type: 3}
-  m_PrefabInstance: {fileID: 3894756593725862730}
+--- !u!114 &1955920066996013996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816980423634766720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38927cdc6024b9682b5fe9778b9ef99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  stateHistoryLimit: 32
+  correctionThreshold: 0.05
+  oneFrameAhead: 1
+  correctionMode: 1
+  showGhost: 1
+  ghostDistanceThreshold: 0.1
+  ghostMaterial: {fileID: 2100000, guid: 411a48b4a197d4924bec3e3809bc9320, type: 2}
+  positionInterpolationSpeed: 30
+  rotationInterpolationSpeed: 10
+  teleportDistanceMultiplier: 5
+  lineTime: 10

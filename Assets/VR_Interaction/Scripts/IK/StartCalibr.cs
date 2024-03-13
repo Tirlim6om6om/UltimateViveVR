@@ -10,6 +10,7 @@ public class StartCalibr : NetworkBehaviour
     [SerializeField] private Calibrator calibrator;
     [SerializeField] private Calibrator calibratorNetwork;
     [SerializeField] private GameObject model;
+    [SerializeField] private GameObject modelNet;
     private bool _calibrated;
 
     private void Update()
@@ -54,7 +55,10 @@ public class StartCalibr : NetworkBehaviour
     [ClientRpc]
     private void CalibrClient()
     {
-        if(!isOwned)
-            calibratorNetwork.Calibrate();
+        if (isOwned)
+            return;
+        calibratorNetwork.settings = calibrator.settings;
+        calibratorNetwork.Calibrate();
+        modelNet.SetActive(true);
     }
 }

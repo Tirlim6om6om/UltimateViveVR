@@ -15,6 +15,5 @@ MonoBehaviour:
   m_isInstallingWaveXRPlugin: 0
   m_isInstallingOpenVRXRPlugin: 0
   m_ignoreKeys:
-  - LoadBindingConfigonStart
-  - BindingInterfaceSwitch
   - InitializeonStartup
+  - VirtualRealitySupportedwithOpenVR

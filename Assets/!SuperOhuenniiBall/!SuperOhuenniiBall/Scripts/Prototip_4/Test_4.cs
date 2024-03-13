@@ -1,13 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
-using UnityEngine.UI;
-using TMPro;
 
 public class Test_4 : MonoBehaviour
 {
     [Header("UI")]
-    public TextMeshProUGUI TextUI;
     private float totalRayLength = 0f; // Общая сумма длин лучейы
 
     
@@ -68,21 +64,15 @@ public class Test_4 : MonoBehaviour
         TrackMovement();
         DrawDebugRays();
     }
-
+    
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
         {
-            
             Debug.Log("Удар");
             Vector3 hitDirection = CalculateHitDirection();
             Vector3 contactPoint = collision.contacts[0].point;
             Vector3 centerOfBall = collision.gameObject.GetComponent<Collider>().bounds.center;
-            
-            
-            
-
-            //TextUI.text = currentSpeed.ToString("F2");
             
             // Обновляем impactForceCoefficient в соответствии с силой удара
             
@@ -115,20 +105,7 @@ public class Test_4 : MonoBehaviour
                 impactForceCoefficient *= RonaldoUscor;
             }
 
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             float impactMagnitude = totalRayLength * impactForceCoefficient;
-            
-
             // Рисуем синий луч
             Vector3 blueRayEndPoint = contactPoint + hitDirection.normalized * impactMagnitude;
             Debug.DrawRay(contactPoint, hitDirection.normalized * impactMagnitude, Color.blue, 10f);
@@ -141,9 +118,7 @@ public class Test_4 : MonoBehaviour
             // Рисуем фиолетовый луч
             Vector3 purpleRayEndPoint = ((blueRayEndPoint + whiteRayEndPoint) / 2);
             Debug.DrawRay(contactPoint, purpleRayEndPoint - contactPoint, Color.magenta, 10f);
-            
-            
-            
+
             // Контрольная точка для Безье кривой - это будет где-то вдоль синего луча
              Vector3 controlPointForBezier = blueRayEndPoint + (whiteRayEndPoint - blueRayEndPoint) * 0.25f; // Четверть пути к белому лучу
          
@@ -154,28 +129,22 @@ public class Test_4 : MonoBehaviour
 
             // Сброс общей суммы длин лучей после удара
             totalRayLength = 0f;
-            
-            
+
             // Вызываем модифицированный метод для получения траектории Безье
             //List<Vector3> bezierPath = CalculateBezierPath(contactPoint, purpleRayEndPoint, controlPointForBezier, impactMagnitude);
             // Вызываем модифицированный метод для получения траектории Безье, начиная от центра мяча
             List<Vector3> bezierPath = CalculateBezierPath(centerOfBall, purpleRayEndPoint, controlPointForBezier, impactMagnitude);
-            
-            // Запускаем корутину для перемещения мяча по траектории
-            StartCoroutine(MoveBallAlongPath(collision.gameObject, bezierPath));
 
-            
+            // Запускаем корутину для перемещения мяча по траектории
+
+            if (collision.gameObject.TryGetComponent(out BallKick ball))
+            {
+                ball.MoveBallCMD(bezierPath, UskorenieIzKrivoy);
+            }
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
+
     List<Vector3> CalculateBezierPath(Vector3 start, Vector3 end, Vector3 controlPoint, float length)
     {
         List<Vector3> path = new List<Vector3>();
@@ -190,50 +159,6 @@ public class Test_4 : MonoBehaviour
 
         return path;
     }
-
-
-    
-    
-    
-    
-    IEnumerator MoveBallAlongPath(GameObject ball, List<Vector3> path)
-    {
-        Rigidbody rb = ball.GetComponent<Rigidbody>();
-        rb.isKinematic = true; // Отключаем физику, чтобы управлять перемещением вручную
-
-        float accelerationFactor = UskorenieIzKrivoy; // Коэффициент ускорения, можно настроить для изменения поведения ускорения
-        Vector3 previousPosition = ball.transform.position;
-        Vector3 velocity = Vector3.zero;
-
-        for (int i = 0; i < path.Count; i++)
-        {
-            float t = (float)i / (path.Count - 1);
-            // Применяем функцию ускорения (в этом случае линейную для упрощения)
-            t = Mathf.Pow(t, accelerationFactor);
-        
-            // Ограничиваем t двумя третями пути
-            if (t > 0.66f) break;
-        
-            
-            ball.transform.position = Vector3.Lerp(previousPosition, path[i], t);
-            velocity = (ball.transform.position - previousPosition) / Time.deltaTime; // Вычисляем текущую скорость
-            previousPosition = ball.transform.position;
-        
-            yield return null; // Ждем следующий кадр
-        }
-
-        // Переключаемся на стандартную физику и применяем последнюю скорость
-        rb.isKinematic = false;
-        rb.velocity = velocity;
-        
-        impactForceCoefficient = impactForceCoefficientconst;
-    }
-    
-
-    
-    
-    
-    
     
     void DrawBezierCurve(Vector3 start, Vector3 end, Vector3 controlPoint, float length, Color color)
     {
@@ -279,14 +204,8 @@ public class Test_4 : MonoBehaviour
 
           
         }
-        
-        
+       
     }
-    
-    
-
-    
-
     void DrawDebugRays()
     {
         Vector3 previousPosition = Vector3.zero;
