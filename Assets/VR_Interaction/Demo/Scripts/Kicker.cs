@@ -12,9 +12,9 @@ namespace BCS.CORE.VR.Network.Example
         void FixedUpdate()
         {
             _power = Mathf.Lerp(
-                Vector3.Distance(_lastpos, transform.position) * 1 +
-                Quaternion.Angle(_lastrot, transform.rotation) * .25f, _power, Time.fixedDeltaTime);
-            _power -= .25f;
+                Vector3.Distance(_lastpos, transform.position) * 0.5f +
+                Quaternion.Angle(_lastrot, transform.rotation) * .125f, _power, Time.fixedDeltaTime);
+            _power -= .125f;
             _power *= 3;
             _lastrot = transform.rotation;
             _lastpos = transform.position;

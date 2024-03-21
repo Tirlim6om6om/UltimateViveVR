@@ -21,13 +21,13 @@ QualitySettings:
     skinWeights: 1
     textureQuality: 1
     anisotropicTextures: 0
-    antiAliasing: 0
+    antiAliasing: 8
     softParticles: 0
     softVegetation: 0
     realtimeReflectionProbes: 0
     billboardsFaceCameraPosition: 0
     vSyncCount: 0
-    realtimeGICPUUsage: 25
+    realtimeGICPUUsage: 50
     lodBias: 0.3
     maximumLODLevel: 0
     streamingMipmapsActive: 0

@@ -25,7 +25,7 @@ public class Spawner : NetworkBehaviour
         }
 #endif
 
-        if (deviceState.GetButtonPress(VRModuleRawButton.A))
+        if (deviceState.GetButtonPress(VRModuleRawButton.Trigger))
         {
             if (!_spawned)
             {

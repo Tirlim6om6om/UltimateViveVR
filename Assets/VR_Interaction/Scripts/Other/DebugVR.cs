@@ -9,26 +9,26 @@ namespace BCS.CORE.VR
     public class DebugVR : MonoBehaviour
     {
         public Text textLog;
-        private static DebugVR _instance;
+        public static DebugVR instance;
         
         private void Awake()
         {
-            if (_instance)
+            if (instance)
             {
                 Destroy(this);
             }
             else
             {
-                _instance = this;
+                instance = this;
             }
         }
 
         public static void Log(string message)
         {
             Debug.Log("DebugVR: " + message);
-            if (_instance && _instance.textLog)
+            if (instance && instance.textLog)
             {
-                _instance.textLog.text = message + '\n' + _instance.textLog.text;
+                instance.textLog.text = message + '\n' + instance.textLog.text;
             }
         }
     }

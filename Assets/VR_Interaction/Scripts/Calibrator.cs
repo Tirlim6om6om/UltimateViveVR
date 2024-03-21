@@ -19,13 +19,14 @@ public class Calibrator : MonoBehaviour
 
     public void Calibrate()
     {
-        if (bodyTracker && bodyTracker.gameObject.activeSelf)
-        {
-            VRIKCalibrator.Calibrate(ik, settings, headTracker, bodyTracker, leftHandTracker, rightHandTracker, leftFootTracker, rightFootTracker);
-        }
-        else
-        {
-            VRIKCalibrator.Calibrate(ik, settings, headTracker, null, leftHandTracker, rightHandTracker, leftFootTracker, rightFootTracker);
-        }
+
+        VRIKCalibrator.Calibrate(ik, 
+            settings, 
+            headTracker, 
+            bodyTracker.gameObject.activeSelf ? bodyTracker : null, 
+            leftHandTracker.gameObject.activeSelf ? leftHandTracker : null, 
+            rightHandTracker.gameObject.activeSelf ? rightHandTracker : null, 
+            leftFootTracker.gameObject.activeSelf ? leftFootTracker : null, 
+            rightFootTracker.gameObject.activeSelf ? rightFootTracker : null);
     }
 }
