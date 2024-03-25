@@ -1865,8 +1865,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3891256112217502746}
   - component: {fileID: 3891256112217787241}
-  - component: {fileID: 592672417361669878}
-  - component: {fileID: 2845312462846837323}
   m_Layer: 0
   m_Name: PlayerVR
   m_TagString: Untagged
@@ -1913,33 +1911,6 @@ MonoBehaviour:
   - {fileID: 3891256112405076846}
   - {fileID: 3891256113249177637}
   - {fileID: 8786940049617407961}
---- !u!114 &592672417361669878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3891256112217787238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 389a873386ef431e99810bc5bf623d62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  receivers:
-  - {fileID: 8353633799054049153}
---- !u!114 &2845312462846837323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3891256112217787238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21d21f4f7b93470288372aa2580b500e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  watcher: {fileID: 592672417361669878}
 --- !u!1 &3891256112217801888
 GameObject:
   m_ObjectHideFlags: 0
@@ -4028,14 +3999,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7797757380162560908, guid: ef2c69a8f29957c48b372724900d3d9b, type: 3}
   m_PrefabInstance: {fileID: 2294903605793463308}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8353633799054049153 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7797757380162560909, guid: ef2c69a8f29957c48b372724900d3d9b, type: 3}
-  m_PrefabInstance: {fileID: 2294903605793463308}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 777b7497c022452aa1d729c80bf58011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
