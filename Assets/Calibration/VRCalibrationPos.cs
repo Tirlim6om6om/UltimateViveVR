@@ -16,7 +16,7 @@ public class VRCalibrationPos : MonoBehaviour
         var deviceState = VRModule.GetDeviceState(VRModule.GetLeftControllerDeviceIndex());
 
 #if UNITY_EDITOR
-        DebugVR.Log("Pos = " + VRModule.GetDeviceState(0).pose.pos);
+        //DebugVR.Log("Pos = " + VRModule.GetDeviceState(0).pose.pos);
         if (Input.GetKeyDown(KeyCode.M))
         {
             StartCalibr();

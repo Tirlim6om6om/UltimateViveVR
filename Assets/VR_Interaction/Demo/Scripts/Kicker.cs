@@ -12,10 +12,10 @@ namespace BCS.CORE.VR.Network.Example
         void FixedUpdate()
         {
             _power = Mathf.Lerp(
-                Vector3.Distance(_lastpos, transform.position) * 0.5f +
-                Quaternion.Angle(_lastrot, transform.rotation) * .125f, _power, Time.fixedDeltaTime);
-            _power -= .125f;
-            _power *= 3;
+                Vector3.Distance(_lastpos, transform.position) * 2f +
+                Quaternion.Angle(_lastrot, transform.rotation) * .04f, _power, Time.fixedDeltaTime);
+            _power -= .15f;
+            _power *= 5;
             _lastrot = transform.rotation;
             _lastpos = transform.position;
         }
@@ -31,12 +31,14 @@ namespace BCS.CORE.VR.Network.Example
         [Command (requiresAuthority = false)]
         public void Kick(GameObject other, float powerInput, Vector3 pos)
         {
+            DebugVR.Log("Kick cmd");
             KickClients(other, powerInput, pos);
         }
 
         [ClientRpc]
         private void KickClients(GameObject other, float powerInput, Vector3 pos)
         {
+            DebugVR.Log("Kick rpc: powernInput = " + powerInput);
             if (powerInput > 0)
             {
                 other.transform.GetComponent<Rigidbody>()

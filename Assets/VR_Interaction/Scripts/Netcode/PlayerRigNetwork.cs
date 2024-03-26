@@ -45,6 +45,7 @@ namespace BCS.CORE.VR.Network
         /// </summary>
         private void SetVisualLocal()
         {
+            DebugVR.Log(gameObject.name + " is local: " + isLocalPlayer);
             playerLocal.SetActive(isLocalPlayer);
             foreach (var visual in visualsNetwork)
             {
