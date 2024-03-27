@@ -179,6 +179,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7030a94f8b586074f894d8c7ee351e35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   framesToTrack: 15
   slowSpeedThreshold: 0.1
   highSpeedThreshold: 0.5
@@ -325,6 +328,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7030a94f8b586074f894d8c7ee351e35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   framesToTrack: 15
   slowSpeedThreshold: 0.1
   highSpeedThreshold: 0.5
@@ -471,6 +477,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7030a94f8b586074f894d8c7ee351e35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   framesToTrack: 15
   slowSpeedThreshold: 0.1
   highSpeedThreshold: 0.5
@@ -720,6 +729,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7030a94f8b586074f894d8c7ee351e35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   framesToTrack: 15
   slowSpeedThreshold: 0.1
   highSpeedThreshold: 0.5
@@ -1234,8 +1246,8 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
+  m_RenderPostProcessing: 1
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0

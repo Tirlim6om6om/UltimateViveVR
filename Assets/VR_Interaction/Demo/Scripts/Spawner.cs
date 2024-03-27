@@ -7,10 +7,11 @@ public class Spawner : NetworkBehaviour
     [SerializeField] private GameObject ball;
     private bool _spawned;
 
+    [Command(requiresAuthority = false)]
     public void Spawn(Vector3 pos)
     {
         GameObject spawnBall = Instantiate(ball, pos, Quaternion.identity);
-        //NetworkServer.Spawn(spawnBall);
+        NetworkServer.Spawn(spawnBall);
     }
 
     private void Update()

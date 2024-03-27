@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 6132355254851933114}
   - component: {fileID: 3139862440751507541}
   - component: {fileID: 6697074908059939772}
+  - component: {fileID: 6290397940744368591}
+  - component: {fileID: 7475114378950362861}
   m_Layer: 0
   m_Name: BallNew
   m_TagString: Ball
@@ -172,7 +174,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -230,3 +232,55 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2932eee821fe69a4a90b07259276fef9, type: 3}
   - {fileID: 8300000, guid: 2615f7d9f82fca446a900203657dd10e, type: 3}
   - {fileID: 8300000, guid: 91641513e153c4940bf87a7cafc050a0, type: 3}
+--- !u!114 &6290397940744368591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8343771841779534708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clientStarted: 0
+  sceneId: 0
+  _assetId: 2731901371
+  serverOnly: 0
+  visible: 2
+  hasSpawned: 0
+--- !u!114 &7475114378950362861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8343771841779534708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 6547442384365275854}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  sendIntervalMultiplier: 1
+  timelineOffset: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01

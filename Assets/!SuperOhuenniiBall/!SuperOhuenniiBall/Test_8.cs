@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
+using Mirror;
 
-public class Test_8 : MonoBehaviour
+public class Test_8 : NetworkBehaviour
 {
     private float totalRayLength = 0f; // Общая сумма длин лучейы
 
@@ -82,123 +83,121 @@ public class Test_8 : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ball"))
         {
-            
             Debug.Log("Удар");
-            Vector3 hitDirection = CalculateHitDirection();
-            Vector3 contactPoint = collision.contacts[0].point;
-            Vector3 centerOfBall = collision.gameObject.GetComponent<Collider>().bounds.center;
-            Rigidbody ballRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 pointOfContact = collision.contacts[0].point;
-            
-        
-
-            
-            
-
-            
-            // Обновляем impactForceCoefficient в соответствии с силой удара
-            
-            // Проверяем, находимся ли мы в условии низкой скорости
-            if (currentSpeed <= 1.2f)
-            {
-                
-                return;
-                // Проверяем, выше ли точка соприкосновения центра мяча
-                if (contactPoint.y > centerOfBall.y)
-                {
-                    // Определяем направление катения мяча на основе направления движения
-                    Vector3 rollDirection = hitDirection;
-                    // Устанавливаем направление катения перпендикулярно вектору от центра мяча к точке соприкосновения
-                    // Это имитирует эффект "вступления на мяч"
-                    rollDirection = Vector3.Cross(Vector3.up, rollDirection).normalized;
-                    float rollForceMagnitude = 1f; // Сила катения, может потребоваться настройка
-
-                    // Применяем силу для катения мяча
-                    ballRigidbody.AddForce(rollDirection * rollForceMagnitude, ForceMode.Impulse);
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else if (currentSpeed > 1.2f && currentSpeed <= katimBall)
-            {
-                impactForceCoefficient *= katimUscor;
-            }
-            else if (currentSpeed > katimBall && currentSpeed <= pasBall)
-            {
-                impactForceCoefficient *= pasUscor;
-            }
-            else if (currentSpeed > pasBall && currentSpeed <= mediumPasBall)
-            {
-                impactForceCoefficient *= mediumPasUscor;
-            }
-            else if (currentSpeed > mediumPasBall && currentSpeed <= navesBall)
-            {
-                impactForceCoefficient *= navesUscor;
-            }
-            else if (currentSpeed > navesBall && currentSpeed <= udarBall)
-            {
-                impactForceCoefficient *= udarUscor;
-            }
-            else if (currentSpeed > navesBall)
-            {
-                impactForceCoefficient *= RonaldoUscor;
-            }
-
-            
-            float impactMagnitude = totalRayLength * impactForceCoefficient;
-            
-
-            // Рисуем синий луч
-            Vector3 blueRayEndPoint = contactPoint + hitDirection.normalized * impactMagnitude;
-            Debug.DrawRay(contactPoint, hitDirection.normalized * impactMagnitude, Color.blue, 10f);
-
-            // Рисуем белый луч
-            Vector3 whiteRayDirection = (centerOfBall - contactPoint).normalized;
-            Vector3 whiteRayEndPoint = contactPoint + whiteRayDirection * impactMagnitude;
-            Debug.DrawRay(contactPoint, whiteRayDirection * impactMagnitude, Color.white, 10f);
-
-            // Рисуем фиолетовый луч
-            Vector3 purpleRayEndPoint = ((blueRayEndPoint + whiteRayEndPoint) / 2);
-            Debug.DrawRay(contactPoint, purpleRayEndPoint - contactPoint, Color.magenta, 10f);
-            
-            
-            
-            // Контрольная точка для Безье кривой - это будет где-то вдоль синего луча
-             Vector3 controlPointForBezier = blueRayEndPoint + (whiteRayEndPoint - blueRayEndPoint) * 0.25f; // Четверть пути к белому лучу
-         
-            // Рисуем Безье кривую
-            // DrawBezierCurve(contactPoint, purpleRayEndPoint, controlPointForBezier, impactMagnitude, Color.cyan);
-            // Рисуем Безье кривую, начиная от центра мяча
-            DrawBezierCurve(centerOfBall, purpleRayEndPoint, controlPointForBezier, impactMagnitude, Color.cyan);
-
-            // Сброс общей суммы длин лучей после удара
-            totalRayLength = 0f;
-            
-            
-            // Вызываем модифицированный метод для получения траектории Безье
-            //List<Vector3> bezierPath = CalculateBezierPath(contactPoint, purpleRayEndPoint, controlPointForBezier, impactMagnitude);
-            // Вызываем модифицированный метод для получения траектории Безье, начиная от центра мяча
-            List<Vector3> bezierPath = CalculateBezierPath(centerOfBall, purpleRayEndPoint, controlPointForBezier, impactMagnitude);
-            
-            // Запускаем корутину для перемещения мяча по траектории
-            StartCoroutine(MoveBallAlongPath(collision.gameObject, bezierPath));
-            
-            
-            //вращение мяча вокруг своей оси
-
-            
-            // Вектор от центра мяча к точке соприкосновения (можно использовать для определения "направления" вращения)
-            Vector3 directionOfSpin = Vector3.Cross(hitDirection, pointOfContact - centerOfBall).normalized;
-
-            // Модифицируйте эту величину, чтобы изменить "силу" вращения
-            float spinPower = 10f; // Примерное значение, требуется настройка под вашу задачу
-
-            // Применяем угловую скорость
-            ballRigidbody.angularVelocity = directionOfSpin * spinPower;
-
+            Kick(collision);
         }
+    }
+
+    [Command(requiresAuthority = false)]
+    public void Kick(Collision collision)
+    {
+        Vector3 hitDirection = CalculateHitDirection();
+        Vector3 contactPoint = collision.contacts[0].point;
+        Vector3 centerOfBall = collision.gameObject.GetComponent<Collider>().bounds.center;
+        Rigidbody ballRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+        Vector3 pointOfContact = collision.contacts[0].point;
+
+        // Обновляем impactForceCoefficient в соответствии с силой удара
+
+        // Проверяем, находимся ли мы в условии низкой скорости
+        if (currentSpeed <= 1.2f)
+        {
+
+            return;
+            // Проверяем, выше ли точка соприкосновения центра мяча
+            if (contactPoint.y > centerOfBall.y)
+            {
+                // Определяем направление катения мяча на основе направления движения
+                Vector3 rollDirection = hitDirection;
+                // Устанавливаем направление катения перпендикулярно вектору от центра мяча к точке соприкосновения
+                // Это имитирует эффект "вступления на мяч"
+                rollDirection = Vector3.Cross(Vector3.up, rollDirection).normalized;
+                float rollForceMagnitude = 1f; // Сила катения, может потребоваться настройка
+
+                // Применяем силу для катения мяча
+                ballRigidbody.AddForce(rollDirection * rollForceMagnitude, ForceMode.Impulse);
+            }
+            else
+            {
+                return;
+            }
+        }
+        else if (currentSpeed > 1.2f && currentSpeed <= katimBall)
+        {
+            impactForceCoefficient *= katimUscor;
+        }
+        else if (currentSpeed > katimBall && currentSpeed <= pasBall)
+        {
+            impactForceCoefficient *= pasUscor;
+        }
+        else if (currentSpeed > pasBall && currentSpeed <= mediumPasBall)
+        {
+            impactForceCoefficient *= mediumPasUscor;
+        }
+        else if (currentSpeed > mediumPasBall && currentSpeed <= navesBall)
+        {
+            impactForceCoefficient *= navesUscor;
+        }
+        else if (currentSpeed > navesBall && currentSpeed <= udarBall)
+        {
+            impactForceCoefficient *= udarUscor;
+        }
+        else if (currentSpeed > navesBall)
+        {
+            impactForceCoefficient *= RonaldoUscor;
+        }
+
+
+        float impactMagnitude = totalRayLength * impactForceCoefficient;
+
+
+        // Рисуем синий луч
+        Vector3 blueRayEndPoint = contactPoint + hitDirection.normalized * impactMagnitude;
+        Debug.DrawRay(contactPoint, hitDirection.normalized * impactMagnitude, Color.blue, 10f);
+
+        // Рисуем белый луч
+        Vector3 whiteRayDirection = (centerOfBall - contactPoint).normalized;
+        Vector3 whiteRayEndPoint = contactPoint + whiteRayDirection * impactMagnitude;
+        Debug.DrawRay(contactPoint, whiteRayDirection * impactMagnitude, Color.white, 10f);
+
+        // Рисуем фиолетовый луч
+        Vector3 purpleRayEndPoint = ((blueRayEndPoint + whiteRayEndPoint) / 2);
+        Debug.DrawRay(contactPoint, purpleRayEndPoint - contactPoint, Color.magenta, 10f);
+
+
+
+        // Контрольная точка для Безье кривой - это будет где-то вдоль синего луча
+        Vector3 controlPointForBezier = blueRayEndPoint + (whiteRayEndPoint - blueRayEndPoint) * 0.25f; // Четверть пути к белому лучу
+
+        // Рисуем Безье кривую
+        // DrawBezierCurve(contactPoint, purpleRayEndPoint, controlPointForBezier, impactMagnitude, Color.cyan);
+        // Рисуем Безье кривую, начиная от центра мяча
+        DrawBezierCurve(centerOfBall, purpleRayEndPoint, controlPointForBezier, impactMagnitude, Color.cyan);
+
+        // Сброс общей суммы длин лучей после удара
+        totalRayLength = 0f;
+
+
+        // Вызываем модифицированный метод для получения траектории Безье
+        //List<Vector3> bezierPath = CalculateBezierPath(contactPoint, purpleRayEndPoint, controlPointForBezier, impactMagnitude);
+        // Вызываем модифицированный метод для получения траектории Безье, начиная от центра мяча
+        List<Vector3> bezierPath = CalculateBezierPath(centerOfBall, purpleRayEndPoint, controlPointForBezier, impactMagnitude);
+
+        // Запускаем корутину для перемещения мяча по траектории
+        StartCoroutine(MoveBallAlongPath(collision.gameObject, bezierPath));
+
+
+        //вращение мяча вокруг своей оси
+
+
+        // Вектор от центра мяча к точке соприкосновения (можно использовать для определения "направления" вращения)
+        Vector3 directionOfSpin = Vector3.Cross(hitDirection, pointOfContact - centerOfBall).normalized;
+
+        // Модифицируйте эту величину, чтобы изменить "силу" вращения
+        float spinPower = 10f; // Примерное значение, требуется настройка под вашу задачу
+
+        // Применяем угловую скорость
+        ballRigidbody.angularVelocity = directionOfSpin * spinPower;
     }
     
     
