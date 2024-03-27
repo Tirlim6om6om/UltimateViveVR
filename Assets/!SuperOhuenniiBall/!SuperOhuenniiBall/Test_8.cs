@@ -88,7 +88,6 @@ public class Test_8 : NetworkBehaviour
         }
     }
 
-    [Command(requiresAuthority = false)]
     public void Kick(Collision collision)
     {
         Vector3 hitDirection = CalculateHitDirection();

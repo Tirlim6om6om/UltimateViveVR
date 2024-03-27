@@ -180,7 +180,7 @@ MonoBehaviour:
         m_RotationOrder: 4
       useAnimatedBendNormal: 0
     locomotion:
-      mode: 1
+      mode: 0
       weight: 1
       moveThreshold: 0.3
       animationHeader: 0

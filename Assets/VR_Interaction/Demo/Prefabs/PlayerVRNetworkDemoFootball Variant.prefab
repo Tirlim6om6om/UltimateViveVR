@@ -494,9 +494,9 @@ MonoBehaviour:
   katimUscor: 0.8
   pasUscor: 2.8
   mediumPasUscor: 3.8
-  navesUscor: 5.8
-  udarUscor: 8.8
-  RonaldoUscor: 11
+  navesUscor: 4.8
+  udarUscor: 5.8
+  RonaldoUscor: 9
   currentSpeed: 0
 --- !u!54 &2291582297043516603
 Rigidbody:
